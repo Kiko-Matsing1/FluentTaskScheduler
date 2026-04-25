@@ -6,6 +6,7 @@ using FluentTaskScheduler.Services;
 using Windows.Storage.Pickers;
 using Microsoft.UI.Xaml.Input;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace FluentTaskScheduler
 {
@@ -13,14 +14,31 @@ namespace FluentTaskScheduler
     {
         private bool _isLoaded = false;
         private StackPanel[]? _panels;
+        private readonly Dictionary<string, string> _sectionTitles = new();
 
         private static readonly int[] _leadMinuteOptions = { 1, 5, 10, 15, 30 };
-        private static string L(string key, string fallback) => LocalizationService.GetString(key, fallback);
 
         public SettingsPage()
         {
             this.InitializeComponent();
             Loaded += SettingsPage_Loaded;
+            LocalizationService.LanguageChanged += LocalizationService_LanguageChanged;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            LocalizationService.LanguageChanged -= LocalizationService_LanguageChanged;
+            base.OnNavigatedFrom(e);
+        }
+
+        private void LocalizationService_LanguageChanged(object? sender, EventArgs e)
+        {
+            if (DispatcherQueue == null) return;
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                ApplyLocalizedUi();
+                SyncPanelVisibility();
+            });
         }
 
         private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
@@ -34,9 +52,9 @@ namespace FluentTaskScheduler
                 ElementTheme.Dark => 1,
                 _ => 2
             };
-            LanguageComboBox.SelectedIndex = SettingsService.Language == "zh-CN" ? 1 : 0;
             OledModeToggle.IsOn = SettingsService.IsOledMode;
             MicaModeToggle.IsOn = SettingsService.IsMicaEnabled;
+            LanguageComboBox.SelectedIndex = SettingsService.Language == "zh-CN" ? 1 : 0;
             UpdateOledToggleState();
 
             // Notifications
@@ -71,6 +89,8 @@ namespace FluentTaskScheduler
             _isLoaded = true;
             PageScrollViewer.IsScrollInertiaEnabled = SettingsService.SmoothScrolling;
 
+            ApplyLocalizedUi();
+
         }
 
         // ── Sidebar ────────────────────────────────────────────────────────────
@@ -90,6 +110,11 @@ namespace FluentTaskScheduler
             if (selectedItem == null) return;
 
             string tag = selectedItem.Tag?.ToString() ?? "";
+
+            if (_sectionTitles.TryGetValue(tag, out var title))
+            {
+                SettingsNav.Header = title;
+            }
             
             PanelAppearance.Visibility = tag == "Appearance" ? Visibility.Visible : Visibility.Collapsed;
             PanelNotifications.Visibility = tag == "Notifications" ? Visibility.Visible : Visibility.Collapsed;
@@ -120,27 +145,6 @@ namespace FluentTaskScheduler
             LogService.Info($"App Theme: {SettingsService.Theme}");
         }
 
-        private async void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (!_isLoaded) return;
-
-            string newLanguage = LanguageComboBox.SelectedIndex == 1 ? "zh-CN" : "en-US";
-            if (SettingsService.Language == newLanguage) return;
-
-            SettingsService.Language = newLanguage;
-            try
-            {
-                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = newLanguage;
-            }
-            catch
-            {
-            }
-
-            await ShowDialog(
-                L("Settings.Language.Changed.Title", "Language Updated"),
-                L("Settings.Language.Changed.Content", "Language preference has been saved. Restart the app to apply all text changes."));
-        }
-
         private void MicaModeToggle_Toggled(object sender, RoutedEventArgs e)
         {
             if (!_isLoaded) return;
@@ -163,6 +167,50 @@ namespace FluentTaskScheduler
             bool isDark = SettingsService.Theme == ElementTheme.Dark;
             OledModeToggle.IsEnabled = isDark;
             MicaModeToggle.IsEnabled = !isDark || !SettingsService.IsOledMode;
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isLoaded) return;
+            if (LanguageComboBox.SelectedItem is not ComboBoxItem selected) return;
+
+            string language = selected.Tag?.ToString() ?? "en-US";
+            bool changed = LocalizationService.ChangeLanguage(language);
+            if (changed)
+            {
+                LogService.Info($"Language switched to {language}");
+            }
+        }
+
+        private void ApplyLocalizedUi()
+        {
+            string L(string key, string fallback) => LocalizationService.GetString(key, fallback);
+
+            NavAppearanceItem.Content = L("Settings.Nav.Appearance", "Appearance");
+            NavNotificationsItem.Content = L("Settings.Nav.Notifications", "Notifications");
+            NavSystemItem.Content = L("Settings.Nav.System", "System");
+            NavAdvancedItem.Content = L("Settings.Nav.Advanced", "Advanced");
+            NavDataItem.Content = L("Settings.Nav.Data", "Data");
+            NavCategoriesItem.Content = L("Settings.Nav.Categories", "Categories & Tags");
+            NavAboutItem.Content = L("Settings.Nav.About", "About");
+
+            AppearanceHeaderText.Text = L("Settings.Section.Appearance", "Appearance");
+            NotificationsHeaderText.Text = L("Settings.Section.Notifications", "Notifications");
+            SystemHeaderText.Text = L("Settings.Section.System", "System");
+            AdvancedHeaderText.Text = L("Settings.Section.Advanced", "Advanced");
+            DataHeaderText.Text = L("Settings.Section.Data", "Data");
+            CategoriesHeaderText.Text = L("Settings.Section.Categories", "Categories & Tags");
+            AboutHeaderText.Text = L("Settings.Section.About", "About");
+            LanguageTitleText.Text = L("Settings.Appearance.Language.Title", "Language");
+            LanguageDescriptionText.Text = L("Settings.Appearance.Language.Description", "Choose the display language for the app.");
+
+            _sectionTitles["Appearance"] = L("Settings.Section.Appearance", "Appearance");
+            _sectionTitles["Notifications"] = L("Settings.Section.Notifications", "Notifications");
+            _sectionTitles["System"] = L("Settings.Section.System", "System");
+            _sectionTitles["Advanced"] = L("Settings.Section.Advanced", "Advanced");
+            _sectionTitles["Data"] = L("Settings.Section.Data", "Data");
+            _sectionTitles["Categories"] = L("Settings.Section.Categories", "Categories & Tags");
+            _sectionTitles["About"] = L("Settings.Section.About", "About");
         }
 
         // ── Notifications ──────────────────────────────────────────────────────
@@ -292,13 +340,13 @@ namespace FluentTaskScheduler
                 {
                     SettingsService.ExportSettings(file.Path);
                     await ShowDialog(
-                        L("Settings.Export.Success.Title", "Export Successful"),
-                        string.Format(L("Settings.Export.Success.Content", "Settings exported to:\n{0}"), file.Path));
+                        LocalizationService.GetString("Settings.Export.Success.Title", "Export Successful"),
+                        string.Format(LocalizationService.GetString("Settings.Export.Success.ContentFormat", "Settings exported to:\n{0}"), file.Path));
                 }
             }
             catch (Exception ex)
             {
-                await ShowDialog(L("Settings.Export.Failed.Title", "Export Failed"), ex.Message);
+                await ShowDialog(LocalizationService.GetString("Settings.Export.Failed.Title", "Export Failed"), ex.Message);
             }
         }
 
@@ -326,13 +374,13 @@ namespace FluentTaskScheduler
                     StartupService.UpdateFromSettings();
 
                     await ShowDialog(
-                        L("Settings.Import.Success.Title", "Import Successful"),
-                        L("Settings.Import.Success.Content", "Settings have been restored. Some changes may require an app restart."));
+                        LocalizationService.GetString("Settings.Import.Success.Title", "Import Successful"),
+                        LocalizationService.GetString("Settings.Import.Success.Content", "Settings have been restored. Some changes may require an app restart."));
                 }
             }
             catch (Exception ex)
             {
-                await ShowDialog(L("Settings.Import.Failed.Title", "Import Failed"), ex.Message);
+                await ShowDialog(LocalizationService.GetString("Settings.Import.Failed.Title", "Import Failed"), ex.Message);
             }
         }
 
@@ -344,8 +392,8 @@ namespace FluentTaskScheduler
             if (release == null)
             {
                 await ShowDialog(
-                    L("Settings.WhatsNew.Title", "What's New"),
-                    L("Settings.WhatsNew.FetchFailed", "Could not fetch release notes. Check your internet connection and try again."));
+                    LocalizationService.GetString("Settings.WhatsNew.Title", "What's New"),
+                    LocalizationService.GetString("Settings.WhatsNew.FetchFailed", "Could not fetch release notes. Check your internet connection and try again."));
                 return;
             }
             var dialog = new Dialogs.WhatsNewDialog(release) { XamlRoot = this.XamlRoot };
@@ -367,27 +415,27 @@ namespace FluentTaskScheduler
             if (result.Status == Services.VeloPackUpdateService.UpdateResultStatus.Error)
             {
                 await ShowDialog(
-                    L("Settings.Update.ErrorTitle", "Update Error"),
-                    string.Format(L("Settings.Update.ErrorContent", "An error occurred while checking for updates:\n{0}"), result.ErrorMessage));
+                    LocalizationService.GetString("Settings.UpdateError.Title", "Update Error"),
+                    string.Format(LocalizationService.GetString("Settings.UpdateError.ContentFormat", "An error occurred while checking for updates:\n{0}"), result.ErrorMessage));
                 return;
             }
 
             if (result.Status == Services.VeloPackUpdateService.UpdateResultStatus.NoUpdate || result.Info == null)
             {
                 await ShowDialog(
-                    L("Settings.Update.UpToDate.Title", "Up to Date"),
-                    L("Settings.Update.UpToDate.Content", "You're already running the latest version."));
+                    LocalizationService.GetString("Settings.UpToDate.Title", "Up to Date"),
+                    LocalizationService.GetString("Settings.UpToDate.Content", "You're already running the latest version."));
                 return;
             }
 
             var dialog = new ContentDialog
             {
-                Title = L("Settings.Update.Available.Title", "Update Available"),
+                Title = LocalizationService.GetString("Dialog.UpdateAvailable.Title", "Update Available"),
                 Content = string.Format(
-                    L("Settings.Update.Available.Content", "Version {0} has been downloaded and is ready to install.\nRestart now to apply the update?"),
+                    LocalizationService.GetString("Dialog.UpdateAvailable.ContentFormat", "Version {0} has been downloaded and is ready to install.\nRestart now to apply the update?"),
                     result.NewVersion),
-                PrimaryButtonText = L("Dialog.RestartNow", "Restart Now"),
-                CloseButtonText = L("Dialog.Later", "Later"),
+                PrimaryButtonText = LocalizationService.GetString("Dialog.UpdateAvailable.RestartNow", "Restart Now"),
+                CloseButtonText = LocalizationService.GetString("Dialog.Common.Later", "Later"),
                 XamlRoot = this.XamlRoot,
                 RequestedTheme = SettingsService.Theme
             };
@@ -412,7 +460,7 @@ namespace FluentTaskScheduler
             {
                 Title = title,
                 Content = message,
-                CloseButtonText = L("Dialog.OK", "OK"),
+                CloseButtonText = LocalizationService.GetString("Dialog.Common.OK", "OK"),
                 XamlRoot = this.XamlRoot,
                 RequestedTheme = SettingsService.Theme
             };
