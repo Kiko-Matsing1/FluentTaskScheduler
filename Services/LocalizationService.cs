@@ -11,7 +11,8 @@ namespace FluentTaskScheduler.Services
         {
             "en-US",
             "de-DE",
-            "zh-CN"
+            "zh-CN",
+            "ja-JP"
         };
 
         private static string _currentLanguage = "en-US";

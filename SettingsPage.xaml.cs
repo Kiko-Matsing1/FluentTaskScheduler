@@ -58,6 +58,7 @@ namespace FluentTaskScheduler
             {
                 "de-DE" => 1,
                 "zh-CN" => 2,
+                "ja-JP" => 3,
                 _ => 0
             };
             UpdateOledToggleState();
