@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -94,7 +94,7 @@
   <data name="RestartCountText2.Text" xml:space="preserve"><value>mal</value></data>
   <data name="CancelButton.CloseButtonText" xml:space="preserve"><value>Abbrechen</value></data>
   <data name="SaveButton.PrimaryButtonText" xml:space="preserve"><value>Speichern</value></data>
-  <data name="CloseButton.CloseButtonText" xml:space="preserve"><value>Schließen</value></data>
+  <data name="CloseButton.CloseButtonText" xml:space="preserve"><value>Schliessen</value></data>
   <data name="RunNowButton.Content" xml:space="preserve"><value>Jetzt starten</value></data>
   <data name="StopButton.Content" xml:space="preserve"><value>Stop</value></data>
   <data name="DeleteButton.Content" xml:space="preserve"><value>Löschen</value></data>
@@ -120,7 +120,7 @@
   <data name="AboutBuilt.Text" xml:space="preserve"><value>Entwickelt mit WinUI 3</value></data>
   <data name="App.WindowTitle" xml:space="preserve"><value>FluentTaskScheduler</value></data>
   <data name="Dialog.Common.OK" xml:space="preserve"><value>OK</value></data>
-  <data name="Dialog.Common.Close" xml:space="preserve"><value>Schließen</value></data>
+  <data name="Dialog.Common.Close" xml:space="preserve"><value>Schliessen</value></data>
   <data name="Dialog.Common.Cancel" xml:space="preserve"><value>Abbrechen</value></data>
   <data name="Dialog.Common.Delete" xml:space="preserve"><value>Löschen</value></data>
   <data name="Dialog.Common.Import" xml:space="preserve"><value>Importieren</value></data>
@@ -209,4 +209,11 @@ Jetzt App neustarten?</value></data>
 {0}</value></data>
   <data name="Settings.UpToDate.Title" xml:space="preserve"><value>Auf dem neuesten Stand</value></data>
   <data name="Settings.UpToDate.Content" xml:space="preserve"><value>Sie verwenden bereits die neueste Version.</value></data>
+  <data name="Settings.Appearance.Theme.Title" xml:space="preserve"><value>App-Design</value></data>
+  <data name="Settings.Appearance.Theme.Description" xml:space="preserve"><value>Wählen Sie Hell, Dunkel oder folgen Sie der Systemeinstellung.</value></data>
+  <data name="Settings.Appearance.Mica.Title" xml:space="preserve"><value>Mica-Effekt</value></data>
+  <data name="Settings.Appearance.Mica.Description" xml:space="preserve"><value>Wenden Sie das durchscheinende Mica-Hintergrundmaterial an.</value></data>
+  <data name="Settings.Appearance.Oled.Title" xml:space="preserve"><value>OLED-Modus</value></data>
+  <data name="Settings.Appearance.Oled.Description" xml:space="preserve"><value>Rein schwarzer Hintergrund, um auf OLED-Displays Strom zu sparen. Erfordert dunkles Design.</value></data>
 </root>
+

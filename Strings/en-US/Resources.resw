@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -209,4 +209,11 @@ Restart now to apply the update?</value></data>
 {0}</value></data>
   <data name="Settings.UpToDate.Title" xml:space="preserve"><value>Up to Date</value></data>
   <data name="Settings.UpToDate.Content" xml:space="preserve"><value>You're already running the latest version.</value></data>
+  <data name="Settings.Appearance.Theme.Title" xml:space="preserve"><value>App Theme</value></data>
+  <data name="Settings.Appearance.Theme.Description" xml:space="preserve"><value>Choose Light, Dark, or follow the system setting.</value></data>
+  <data name="Settings.Appearance.Mica.Title" xml:space="preserve"><value>Mica Effect</value></data>
+  <data name="Settings.Appearance.Mica.Description" xml:space="preserve"><value>Apply the Mica translucent background material.</value></data>
+  <data name="Settings.Appearance.Oled.Title" xml:space="preserve"><value>OLED Mode</value></data>
+  <data name="Settings.Appearance.Oled.Description" xml:space="preserve"><value>Pure black background to save power on OLED displays. Requires Dark theme.</value></data>
 </root>
+

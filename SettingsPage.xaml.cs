@@ -205,6 +205,12 @@ namespace FluentTaskScheduler
             AboutHeaderText.Text = L("Settings.Section.About", "About");
             LanguageTitleText.Text = L("Settings.Appearance.Language.Title", "Language");
             LanguageDescriptionText.Text = L("Settings.Appearance.Language.Description", "Choose the display language for the app.");
+            AppThemeTitleText.Text = L("Settings.Appearance.Theme.Title", "App Theme");
+            AppThemeDescriptionText.Text = L("Settings.Appearance.Theme.Description", "Choose Light, Dark, or follow the system setting.");
+            MicaTitleText.Text = L("Settings.Appearance.Mica.Title", "Mica Effect");
+            MicaDescriptionText.Text = L("Settings.Appearance.Mica.Description", "Apply the Mica translucent background material.");
+            OledTitleText.Text = L("Settings.Appearance.Oled.Title", "OLED Mode");
+            OledDescriptionText.Text = L("Settings.Appearance.Oled.Description", "Pure black background to save power on OLED displays. Requires Dark theme.");
 
             _sectionTitles["Appearance"] = L("Settings.Section.Appearance", "Appearance");
             _sectionTitles["Notifications"] = L("Settings.Section.Notifications", "Notifications");

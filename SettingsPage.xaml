@@ -73,7 +73,7 @@
                               IsScrollInertiaEnabled="False" VerticalScrollBarVisibility="Auto">
                     <Grid MaxWidth="800" HorizontalAlignment="Left">
 
-                    <!-- ── Appearance ── -->
+                    <!-- Appearance -->
                     <StackPanel x:Name="PanelAppearance" Spacing="4">
                         <TextBlock x:Name="AppearanceHeaderText" Text="Appearance" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
@@ -81,8 +81,8 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
-                                    <TextBlock Text="App Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                    <TextBlock Text="Choose Light, Dark, or follow the system setting." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="AppThemeTitleText" Text="App Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    <TextBlock x:Name="AppThemeDescriptionText" Text="Choose Light, Dark, or follow the system setting." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
                                 </StackPanel>
                                 <ComboBox x:Name="ThemeComboBox" Grid.Column="1" VerticalAlignment="Center"
                                           SelectionChanged="ThemeComboBox_SelectionChanged" Width="160">
@@ -112,8 +112,8 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
-                                    <TextBlock Text="Mica Effect" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                    <TextBlock Text="Apply the Mica translucent background material." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="MicaTitleText" Text="Mica Effect" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    <TextBlock x:Name="MicaDescriptionText" Text="Apply the Mica translucent background material." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
                                 </StackPanel>
                                 <ToggleSwitch x:Name="MicaModeToggle" Grid.Column="1" VerticalAlignment="Center"
                                              OffContent="" OnContent="" IsOn="True" Toggled="MicaModeToggle_Toggled"/>
@@ -124,8 +124,8 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                 <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
-                                    <TextBlock Text="OLED Mode" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                    <TextBlock Text="Pure black background to save power on OLED displays. Requires Dark theme." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="OledTitleText" Text="OLED Mode" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    <TextBlock x:Name="OledDescriptionText" Text="Pure black background to save power on OLED displays. Requires Dark theme." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
                                 </StackPanel>
                                 <ToggleSwitch x:Name="OledModeToggle" Grid.Column="1" VerticalAlignment="Center"
                                              OffContent="" OnContent="" Toggled="OledModeToggle_Toggled"/>
@@ -133,7 +133,7 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ── Notifications ── -->
+                    <!-- Notifications -->
                     <StackPanel x:Name="PanelNotifications" Spacing="4" Visibility="Collapsed">
                         <TextBlock x:Name="NotificationsHeaderText" Text="Notifications" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
@@ -180,7 +180,7 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ── System ── -->
+                    <!-- System -->
                     <StackPanel x:Name="PanelSystem" Spacing="4" Visibility="Collapsed">
                         <TextBlock x:Name="SystemHeaderText" Text="System" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
@@ -233,7 +233,7 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ── Advanced ── -->
+                    <!-- Advanced -->
                     <StackPanel x:Name="PanelAdvanced" Spacing="4" Visibility="Collapsed">
                         <TextBlock x:Name="AdvancedHeaderText" Text="Advanced" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
@@ -290,7 +290,7 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ── Data ── -->
+                    <!-- Data -->
                     <StackPanel x:Name="PanelData" Spacing="4" Visibility="Collapsed">
                         <TextBlock x:Name="DataHeaderText" Text="Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
@@ -317,7 +317,7 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ── Categories & Tags ── -->
+                    <!-- Categories & Tags -->
                     <StackPanel x:Name="PanelCategories" Spacing="16" Visibility="Collapsed">
                         <TextBlock x:Name="CategoriesHeaderText" Text="Categories &amp; Tags" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
@@ -396,7 +396,7 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ── About ── -->
+                    <!-- About -->
                     <StackPanel x:Name="PanelAbout" Spacing="4" Visibility="Collapsed">
                         <TextBlock x:Name="AboutHeaderText" Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
