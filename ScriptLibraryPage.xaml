@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="FluentTaskScheduler.ScriptLibraryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -15,8 +15,8 @@
 
                 <!-- Header row -->
                 <StackPanel Orientation="Horizontal" Spacing="12">
-                    <TextBlock Text="脚本库" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
-                    <Button x:Name="CreateTemplateButton" Content="+ 新建模板" Click="CreateTemplateButton_Click"/>
+                    <TextBlock x:Uid="ScriptLibraryTitle" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                    <Button x:Name="CreateTemplateButton" x:Uid="ScriptLibraryCreateBtn" Click="CreateTemplateButton_Click"/>
                 </StackPanel>
 
                 <!-- Template cards grid -->
@@ -51,14 +51,14 @@
                                             BorderThickness="0"
                                             Padding="4"
                                             VerticalAlignment="Top"
-                                            ToolTipService.ToolTip="删除模板">
+                                            x:Uid="ScriptLibraryDeleteBtn">
                                         <FontIcon Glyph="&#xE74D;" FontSize="12" Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
                                     </Button>
                                 </Grid>
                                 
                                 <TextBlock Grid.Row="1" Text="{x:Bind Description}" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7"/>
                                 
-                                <Button Grid.Row="2" Content="使用此模板创建任务" HorizontalAlignment="Stretch" Click="ScheduleButton_Click" Tag="{x:Bind}"/>
+                                <Button Grid.Row="2" x:Uid="ScriptLibraryUseTemplateBtn" HorizontalAlignment="Stretch" Click="ScheduleButton_Click" Tag="{x:Bind}"/>
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
@@ -68,17 +68,17 @@
 
         <!-- Create Template Dialog -->
         <ContentDialog x:Name="CreateTemplateDialog"
-                       Title="新建模板"
-                       PrimaryButtonText="保存"
-                       CloseButtonText="取消"
+                       x:Uid="ScriptLibraryNewTemplateDialog"
+                       x:Uid="ScriptLibrarySaveBtn"
+                       x:Uid="ScriptLibraryCancelBtn"
                        DefaultButton="Primary"
                        PrimaryButtonClick="CreateTemplateDialog_PrimaryButtonClick">
             <StackPanel Spacing="12" MinWidth="400">
-                <TextBox x:Name="TemplateName"     Header="名称"        PlaceholderText="例如：清理脚本"/>
-                <TextBox x:Name="TemplateDesc"     Header="描述" PlaceholderText="这个模板用于做什么？" TextWrapping="Wrap" AcceptsReturn="True" Height="72"/>
-                <TextBox x:Name="TemplateCommand"  Header="命令"     PlaceholderText="例如：powershell.exe"/>
-                <TextBox x:Name="TemplateArgs"     Header="参数"   PlaceholderText="例如：-File C:\scripts\cleanup.ps1"/>
-                <CheckBox x:Name="TemplateAdmin"   Content="以最高权限运行"/>
+                <TextBox x:Name="TemplateName"     x:Uid="ScriptLibraryNameHeader"        x:Uid="ScriptLibraryNamePlaceholder"/>
+                <TextBox x:Name="TemplateDesc"     x:Uid="ScriptLibraryDescHeader" x:Uid="ScriptLibraryDescPlaceholder" TextWrapping="Wrap" AcceptsReturn="True" Height="72"/>
+                <TextBox x:Name="TemplateCommand"  x:Uid="ScriptLibraryCommandHeader"     x:Uid="ScriptLibraryCommandPlaceholder"/>
+                <TextBox x:Name="TemplateArgs"     x:Uid="ScriptLibraryArgsHeader"   x:Uid="ScriptLibraryArgsPlaceholder"/>
+                <CheckBox x:Name="TemplateAdmin"   x:Uid="ScriptLibraryAdminContent"/>
             </StackPanel>
         </ContentDialog>
     </Grid>
