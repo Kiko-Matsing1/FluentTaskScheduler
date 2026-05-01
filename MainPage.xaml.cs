@@ -116,6 +116,57 @@ namespace FluentTaskScheduler
             AdminDragWarning.Title = L("Main.AdminDragWarning.Title", "Drag & Drop Restricted");
             AdminDragWarning.Message = L("Main.AdminDragWarning.Message", "Windows does not support drag-and-drop operations when the app is running as Administrator.");
 
+            // --- Edit/Add Dialog ---
+            DlgTaskNameLabel.Text = L("Dialog.TaskName", "Task Name");
+            DlgDescLabel.Text = L("Dialog.Description", "Description");
+            DlgAuthorLabel.Text = L("Dialog.Author", "Author");
+            DlgCategoryLabel.Text = L("Dialog.Category", "Category");
+            DlgTagsLabel.Text = L("Dialog.Tags", "Tags");
+            DlgEnabledLabel.Text = L("Dialog.Enabled", "Enabled");
+
+            // Trigger types
+            DlgTriggerTypeLabel.Text = L("Dialog.TriggerType", "Trigger Type");
+            DlgTriggerDaily.Content = L("Dialog.Trigger.Daily", "Daily");
+            DlgTriggerWeekly.Content = L("Dialog.Trigger.Weekly", "Weekly");
+            DlgTriggerMonthly.Content = L("Dialog.Trigger.Monthly", "Monthly");
+            DlgTriggerLogon.Content = L("Dialog.Trigger.AtLogon", "At Logon");
+            DlgTriggerStartup.Content = L("Dialog.Trigger.AtStartup", "At Startup");
+            DlgTriggerOnce.Content = L("Dialog.Trigger.OneTime", "One Time");
+            DlgTriggerEvent.Content = L("Dialog.Trigger.OnEvent", "On an event");
+            DlgTriggerSession.Content = L("Dialog.Trigger.Session", "On Workstation Lock/Unlock");
+
+            EditTaskRandomDelay.Content = L("Dialog.RandomDelay", "Delay task for up to (random delay):");
+            EditTaskStopAfter.Content = L("Dialog.StopAfter", "Stop task if runs longer than:");
+
+            // Actions
+            DlgProgramLabel.Text = L("Dialog.ProgramScript", "Program / Script");
+            DlgArgsLabel.Text = L("Dialog.Arguments", "Arguments (optional)");
+            DlgWorkDirLabel.Text = L("Dialog.WorkingDir", "Run in (optional)");
+            DlgPsTip.Text = L("Dialog.PsTip", "Tip: For PowerShell scripts, use 'powershell.exe' as Program and '-ExecutionPolicy Bypass -File \"C:\\path\\to\\script.ps1\"' as Arguments");
+
+            // Settings section
+            EditTaskRunWithHighestPrivileges.Content = L("Dialog.HighPriv", "Run with highest privileges");
+            EditTaskIsHidden.Content = L("Dialog.Hidden", "Hidden task");
+            EditTaskDeleteExpired.Content = L("Dialog.DeleteExpired", "Delete the task if it is not scheduled to run again");
+            EditTaskAllowHardTerminate.Content = L("Dialog.HardTerminate", "Allow task to be forcefully terminated");
+
+            DlgMultiInstanceLabel.Text = L("Dialog.MultiInstance", "If the task is already running:");
+            DlgMultiIgnore.Content = L("Dialog.Multi.Ignore", "Do not start a new instance");
+            DlgMultiParallel.Content = L("Dialog.Multi.Parallel", "Run a new instance in parallel");
+            DlgMultiQueue.Content = L("Dialog.Multi.Queue", "Queue a new instance");
+            DlgMultiStop.Content = L("Dialog.Multi.Stop", "Stop the existing instance");
+
+            DlgPriorityLabel.Text = L("Dialog.Priority", "Task Priority:");
+
+            DlgRestartUpTo.Text = L("Dialog.RestartUpTo", "Attempt to restart up to:");
+            DlgRestartTimes.Text = L("Dialog.RestartTimes", "times");
+
+            // User Context
+            DlgUserContextTitle.Text = L("Dialog.UserContext", "User Context");
+            RunAsCurrentUser.Content = L("Dialog.RunAsCurrent", "Run as current user");
+            RunAsSpecificUser.Content = L("Dialog.RunAsSpecific", "Run as specific user");
+            RunAsSystem.Content = L("Dialog.RunAsSystem", "Run as SYSTEM (requires admin)");
+
             if (NavView.SelectedItem is NavigationViewItem selectedItem && selectedItem.Tag != null)
             {
                 string tag = selectedItem.Tag.ToString() ?? string.Empty;

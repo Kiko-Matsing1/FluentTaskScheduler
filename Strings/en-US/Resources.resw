@@ -320,7 +320,42 @@ Restart now to apply the update?</value></data>
   <data name="Dashboard.AllCategories" xml:space="preserve"><value>All Categories</value></data>
   <data name="Dashboard.Today" xml:space="preserve"><value>Today</value></data>
   <data name="Dashboard.Unknown" xml:space="preserve"><value>Unknown</value></data>
+
+  <data name="Dialog.TaskName" xml:space="preserve"><value>Task Name</value></data>
+  <data name="Dialog.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Dialog.Author" xml:space="preserve"><value>Author</value></data>
+  <data name="Dialog.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Dialog.Tags" xml:space="preserve"><value>Tags</value></data>
+  <data name="Dialog.Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Dialog.TriggerType" xml:space="preserve"><value>Trigger Type</value></data>
+  <data name="Dialog.Trigger.Daily" xml:space="preserve"><value>Daily</value></data>
+  <data name="Dialog.Trigger.Weekly" xml:space="preserve"><value>Weekly</value></data>
+  <data name="Dialog.Trigger.Monthly" xml:space="preserve"><value>Monthly</value></data>
+  <data name="Dialog.Trigger.AtLogon" xml:space="preserve"><value>At Logon</value></data>
+  <data name="Dialog.Trigger.AtStartup" xml:space="preserve"><value>At Startup</value></data>
+  <data name="Dialog.Trigger.OneTime" xml:space="preserve"><value>One Time</value></data>
+  <data name="Dialog.Trigger.OnEvent" xml:space="preserve"><value>On an event</value></data>
+  <data name="Dialog.Trigger.Session" xml:space="preserve"><value>On Workstation Lock/Unlock</value></data>
+  <data name="Dialog.RandomDelay" xml:space="preserve"><value>Delay task for up to (random delay):</value></data>
+  <data name="Dialog.StopAfter" xml:space="preserve"><value>Stop task if runs longer than:</value></data>
+  <data name="Dialog.ProgramScript" xml:space="preserve"><value>Program / Script</value></data>
+  <data name="Dialog.Arguments" xml:space="preserve"><value>Arguments (optional)</value></data>
+  <data name="Dialog.WorkingDir" xml:space="preserve"><value>Run in (optional)</value></data>
+  <data name="Dialog.PsTip" xml:space="preserve"><value>Tip: For PowerShell scripts, use 'powershell.exe' as Program and '-ExecutionPolicy Bypass -File "C:\path\to\script.ps1"' as Arguments</value></data>
+  <data name="Dialog.HighPriv" xml:space="preserve"><value>Run with highest privileges</value></data>
+  <data name="Dialog.Hidden" xml:space="preserve"><value>Hidden task</value></data>
+  <data name="Dialog.DeleteExpired" xml:space="preserve"><value>Delete the task if it is not scheduled to run again</value></data>
+  <data name="Dialog.HardTerminate" xml:space="preserve"><value>Allow task to be forcefully terminated</value></data>
+  <data name="Dialog.MultiInstance" xml:space="preserve"><value>If the task is already running:</value></data>
+  <data name="Dialog.Multi.Ignore" xml:space="preserve"><value>Do not start a new instance</value></data>
+  <data name="Dialog.Multi.Parallel" xml:space="preserve"><value>Run a new instance in parallel</value></data>
+  <data name="Dialog.Multi.Queue" xml:space="preserve"><value>Queue a new instance</value></data>
+  <data name="Dialog.Multi.Stop" xml:space="preserve"><value>Stop the existing instance</value></data>
+  <data name="Dialog.Priority" xml:space="preserve"><value>Task Priority:</value></data>
+  <data name="Dialog.RestartUpTo" xml:space="preserve"><value>Attempt to restart up to:</value></data>
+  <data name="Dialog.RestartTimes" xml:space="preserve"><value>times</value></data>
+  <data name="Dialog.UserContext" xml:space="preserve"><value>User Context</value></data>
+  <data name="Dialog.RunAsCurrent" xml:space="preserve"><value>Run as current user</value></data>
+  <data name="Dialog.RunAsSpecific" xml:space="preserve"><value>Run as specific user</value></data>
+  <data name="Dialog.RunAsSystem" xml:space="preserve"><value>Run as SYSTEM (requires admin)</value></data>
 </root>
-
-
-

@@ -320,7 +320,46 @@ Jetzt App neustarten?</value></data>
   <data name="Dashboard.AllCategories" xml:space="preserve"><value>Alle Kategorien</value></data>
   <data name="Dashboard.Today" xml:space="preserve"><value>Heute</value></data>
   <data name="Dashboard.Unknown" xml:space="preserve"><value>Unbekannt</value></data>
+
+  <data name="Dialog.TaskName" xml:space="preserve"><value>Aufgabenname</value></data>
+  <data name="Dialog.Description" xml:space="preserve"><value>Beschreibung</value></data>
+  <data name="Dialog.Author" xml:space="preserve"><value>Autor</value></data>
+  <data name="Dialog.Category" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="Dialog.Tags" xml:space="preserve"><value>Tags</value></data>
+  <data name="Dialog.Enabled" xml:space="preserve"><value>Aktiviert</value></data>
+  <data name="Dialog.TriggerType" xml:space="preserve"><value>Triggertyp</value></data>
+  <data name="Dialog.Trigger.Daily" xml:space="preserve"><value>Täglich</value></data>
+  <data name="Dialog.Trigger.Weekly" xml:space="preserve"><value>Wöchentlich</value></data>
+  <data name="Dialog.Trigger.Monthly" xml:space="preserve"><value>Monatlich</value></data>
+  <data name="Dialog.Trigger.AtLogon" xml:space="preserve"><value>Bei Anmeldung</value></data>
+  <data name="Dialog.Trigger.AtStartup" xml:space="preserve"><value>Beim Systemstart</value></data>
+  <data name="Dialog.Trigger.OneTime" xml:space="preserve"><value>Einmalig</value></data>
+  <data name="Dialog.Trigger.OnEvent" xml:space="preserve"><value>Bei einem Ereignis</value></data>
+  <data name="Dialog.Trigger.Session" xml:space="preserve"><value>Bei Sperren/Entsperren</value></data>
+  <data name="Dialog.RandomDelay" xml:space="preserve"><value>Aufgabe verzögern um bis zu (zufällige Verzögerung):</value></data>
+  <data name="Dialog.StopAfter" xml:space="preserve"><value>Aufgabe beenden, wenn sie länger läuft als:</value></data>
+  <data name="Dialog.ProgramScript" xml:space="preserve"><value>Programm / Skript</value></data>
+  <data name="Dialog.Arguments" xml:space="preserve"><value>Argumente (optional)</value></data>
+  <data name="Dialog.WorkingDir" xml:space="preserve"><value>Ausführen in (optional)</value></data>
+  <data name="Dialog.PsTip" xml:space="preserve"><value>Tipp: Für PowerShell-Skripte verwenden Sie 'powershell.exe' als Programm und '-ExecutionPolicy Bypass -File "C:\Pfad\zum\Skript.ps1"' als Argumente</value></data>
+  <data name="Dialog.HighPriv" xml:space="preserve"><value>Mit höchsten Berechtigungen ausführen</value></data>
+  <data name="Dialog.Hidden" xml:space="preserve"><value>Versteckte Aufgabe</value></data>
+  <data name="Dialog.DeleteExpired" xml:space="preserve"><value>Aufgabe löschen, wenn sie nicht erneut geplant ist</value></data>
+  <data name="Dialog.HardTerminate" xml:space="preserve"><value>Erzwungenes Beenden der Aufgabe erlauben</value></data>
+  <data name="Dialog.MultiInstance" xml:space="preserve"><value>Wenn die Aufgabe bereits ausgeführt wird:</value></data>
+  <data name="Dialog.Multi.Ignore" xml:space="preserve"><value>Keine neue Instanz starten</value></data>
+  <data name="Dialog.Multi.Parallel" xml:space="preserve"><value>Neue Instanz parallel ausführen</value></data>
+  <data name="Dialog.Multi.Queue" xml:space="preserve"><value>Neue Instanz in Warteschlange stellen</value></data>
+  <data name="Dialog.Multi.Stop" xml:space="preserve"><value>Vorhandene Instanz beenden</value></data>
+  <data name="Dialog.Priority" xml:space="preserve"><value>Aufgabenpriorität:</value></data>
+  <data name="Dialog.RestartUpTo" xml:space="preserve"><value>Neustart versuchen bis zu:</value></data>
+  <data name="Dialog.RestartTimes" xml:space="preserve"><value>Mal</value></data>
+  <data name="Dialog.UserContext" xml:space="preserve"><value>Benutzerkontext</value></data>
+  <data name="Dialog.RunAsCurrent" xml:space="preserve"><value>Als aktueller Benutzer ausführen</value></data>
+  <data name="Dialog.RunAsSpecific" xml:space="preserve"><value>Als bestimmter Benutzer ausführen</value></data>
+  <data name="Dialog.RunAsSystem" xml:space="preserve"><value>Als SYSTEM ausführen (Admin erforderlich)</value></data>
 </root>
+
 
 
 

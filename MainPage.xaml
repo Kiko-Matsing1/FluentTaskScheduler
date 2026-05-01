@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="FluentTaskScheduler.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -557,7 +557,7 @@
                 <TextBox x:Name="EditTaskName" x:Uid="TaskNameHeader" PlaceholderText="Enter task name">
                     <TextBox.Header>
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Text="Task Name" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="DlgTaskNameLabel" Text="Task Name" VerticalAlignment="Center"/>
                             <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                       ToolTipService.ToolTip="The unique identifier for this task. It must be distinct within its folder in Windows Task Scheduler."/>
                         </StackPanel>
@@ -566,7 +566,7 @@
                 <TextBox x:Name="EditTaskDescription" x:Uid="DescriptionHeader" AcceptsReturn="True" Height="80">
                     <TextBox.Header>
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Text="Description" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="DlgDescLabel" Text="Description" VerticalAlignment="Center"/>
                             <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                       ToolTipService.ToolTip="A human-readable note that explains what this task does. Visible in Task Scheduler and the details panel."/>
                         </StackPanel>
@@ -575,7 +575,7 @@
                 <TextBox x:Name="EditTaskAuthor" x:Uid="AuthorHeader">
                     <TextBox.Header>
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Text="Author" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="DlgAuthorLabel" Text="Author" VerticalAlignment="Center"/>
                             <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                       ToolTipService.ToolTip="The person or system that owns this task. Stored in the task XML; not enforced by Windows."/>
                         </StackPanel>
@@ -596,7 +596,7 @@
                                    SuggestionChosen="EditTaskCategory_SuggestionChosen">
                         <AutoSuggestBox.Header>
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="Category" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="DlgCategoryLabel" Text="Category" VerticalAlignment="Center"/>
                                 <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                           ToolTipService.ToolTip="Groups tasks together for filtering in the main list. Stored inside the task XML as the task's category label."/>
                             </StackPanel>
@@ -610,7 +610,7 @@
                                    SuggestionChosen="EditTaskTags_SuggestionChosen">
                         <AutoSuggestBox.Header>
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="Tags" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="DlgTagsLabel" Text="Tags" VerticalAlignment="Center"/>
                                 <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                           ToolTipService.ToolTip="Custom comma-separated labels used for filtering inside this app. Tags are stored in the task Description field and are NOT a native Windows Task Scheduler feature."/>
                             </StackPanel>
@@ -621,7 +621,7 @@
                 <ToggleSwitch x:Name="EditTaskEnabled" x:Uid="EnabledSwitch" IsOn="True">
                     <ToggleSwitch.Header>
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Text="Enabled" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="DlgEnabledLabel" Text="Enabled" VerticalAlignment="Center"/>
                             <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                       ToolTipService.ToolTip="When off, the task is disabled and will not run on any of its triggers, even if they fire."/>
                         </StackPanel>
@@ -662,19 +662,19 @@
                 <ComboBox x:Name="EditTaskTriggerType" x:Uid="TriggerTypeHeader" SelectedIndex="0" SelectionChanged="EditTaskTriggerType_SelectionChanged" HorizontalAlignment="Stretch">
                     <ComboBox.Header>
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Text="Trigger Type" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="DlgTriggerTypeLabel" Text="Trigger Type" VerticalAlignment="Center"/>
                             <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                       ToolTipService.ToolTip="Determines what event or schedule starts the task. &#x0a;&#x2022; Daily / Weekly / Monthly: time-based schedules.&#x0a;&#x2022; At Logon: runs when a user signs in.&#x0a;&#x2022; At Startup: runs when Windows boots.&#x0a;&#x2022; On an event: triggers from the Windows Event Log."/>
                         </StackPanel>
                     </ComboBox.Header>
-                    <ComboBoxItem Content="Daily" Tag="Daily"/>
-                    <ComboBoxItem Content="Weekly" Tag="Weekly"/>
-                    <ComboBoxItem Content="Monthly" Tag="Monthly"/>
-                    <ComboBoxItem Content="At Logon" Tag="AtLogon"/>
-                    <ComboBoxItem Content="At Startup" Tag="AtStartup"/>
-                    <ComboBoxItem Content="One Time" Tag="Once"/>
-                    <ComboBoxItem Content="On an event" Tag="Event"/>
-                    <ComboBoxItem Content="On Workstation Lock/Unlock" Tag="SessionStateChange"/>
+                    <ComboBoxItem x:Name="DlgTriggerDaily" Content="Daily" Tag="Daily"/>
+                    <ComboBoxItem x:Name="DlgTriggerWeekly" Content="Weekly" Tag="Weekly"/>
+                    <ComboBoxItem x:Name="DlgTriggerMonthly" Content="Monthly" Tag="Monthly"/>
+                    <ComboBoxItem x:Name="DlgTriggerLogon" Content="At Logon" Tag="AtLogon"/>
+                    <ComboBoxItem x:Name="DlgTriggerStartup" Content="At Startup" Tag="AtStartup"/>
+                    <ComboBoxItem x:Name="DlgTriggerOnce" Content="One Time" Tag="Once"/>
+                    <ComboBoxItem x:Name="DlgTriggerEvent" Content="On an event" Tag="Event"/>
+                    <ComboBoxItem x:Name="DlgTriggerSession" Content="On Workstation Lock/Unlock" Tag="SessionStateChange"/>
                 </ComboBox>
                 <StackPanel Spacing="8" Margin="0,8,0,0">
                      <StackPanel x:Name="PanelStartTime" Spacing="16">
@@ -883,7 +883,7 @@
                         <TextBox x:Name="EditTaskActionCommand" x:Uid="ProgramScriptHeader" PlaceholderText="e.g., notepad.exe or C:\Scripts\myscript.ps1" Grid.Column="0" TextChanged="EditTaskActionCommand_TextChanged">
                             <TextBox.Header>
                                 <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <TextBlock Text="Program / Script" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="DlgProgramLabel" Text="Program / Script" VerticalAlignment="Center"/>
                                     <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                               ToolTipService.ToolTip="The full path or name of the executable, script, or document to launch. Use 'powershell.exe' with arguments for PowerShell scripts."/>
                                 </StackPanel>
@@ -894,7 +894,7 @@
                     <TextBox x:Name="EditTaskArguments" x:Uid="ArgumentsHeader" PlaceholderText="e.g., /c echo hello or -File script.ps1" TextChanged="EditTaskArguments_TextChanged" Margin="0,8,0,0">
                         <TextBox.Header>
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="Arguments (optional)" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="DlgArgsLabel" Text="Arguments (optional)" VerticalAlignment="Center"/>
                                 <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                           ToolTipService.ToolTip="Command-line parameters passed directly to the program. For PowerShell: -ExecutionPolicy Bypass -File &quot;C:\path\to\script.ps1&quot;"/>
                             </StackPanel>
@@ -903,13 +903,13 @@
                     <TextBox x:Name="EditTaskWorkingDirectory" x:Uid="WorkingDirectoryHeader" PlaceholderText="e.g., C:\Scripts" TextChanged="EditTaskWorkingDirectory_TextChanged" Margin="0,8,0,0">
                         <TextBox.Header>
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="Run in (optional)" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="DlgWorkDirLabel" Text="Run in (optional)" VerticalAlignment="Center"/>
                                 <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                           ToolTipService.ToolTip="Sets the working directory (current folder) for the process. Relative paths in the program or script will resolve relative to this folder."/>
                             </StackPanel>
                         </TextBox.Header>
                     </TextBox>
-                    <TextBlock Text="Tip: For PowerShell scripts, use 'powershell.exe' as Program and '-ExecutionPolicy Bypass -File &quot;C:\path\to\script.ps1&quot;' as Arguments" 
+                    <TextBlock x:Name="DlgPsTip" Text="Tip: For PowerShell scripts, use 'powershell.exe' as Program and '-ExecutionPolicy Bypass -File &quot;C:\path\to\script.ps1&quot;' as Arguments" 
                                Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" TextWrapping="Wrap" Margin="0,4,0,0"/>
                 </StackPanel>
                 
@@ -1036,21 +1036,21 @@
                     <ComboBox x:Name="EditTaskMultipleInstances">
                         <ComboBox.Header>
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="If the task is already running:" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="DlgMultiInstanceLabel" Text="If the task is already running:" VerticalAlignment="Center"/>
                                 <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                           ToolTipService.ToolTip="Controls behaviour when a new trigger fires while a previous instance is still running.&#x0a;&#x2022; Do not start: ignore the new trigger.&#x0a;&#x2022; Parallel: start another instance alongside.&#x0a;&#x2022; Queue: wait until the current one finishes.&#x0a;&#x2022; Stop existing: kill the current run and start fresh."/>
                             </StackPanel>
                         </ComboBox.Header>
-                        <ComboBoxItem Content="Do not start a new instance" Tag="IgnoreNew" IsSelected="True"/>
-                        <ComboBoxItem Content="Run a new instance in parallel" Tag="Parallel"/>
-                        <ComboBoxItem Content="Queue a new instance" Tag="Queue"/>
-                        <ComboBoxItem Content="Stop the existing instance" Tag="StopExisting"/>
+                        <ComboBoxItem x:Name="DlgMultiIgnore" Content="Do not start a new instance" Tag="IgnoreNew" IsSelected="True"/>
+                        <ComboBoxItem x:Name="DlgMultiParallel" Content="Run a new instance in parallel" Tag="Parallel"/>
+                        <ComboBoxItem x:Name="DlgMultiQueue" Content="Queue a new instance" Tag="Queue"/>
+                        <ComboBoxItem x:Name="DlgMultiStop" Content="Stop the existing instance" Tag="StopExisting"/>
                     </ComboBox>
                     
                     <ComboBox x:Name="EditTaskPriority" SelectedIndex="4">
                         <ComboBox.Header>
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="Task Priority:" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="DlgPriorityLabel" Text="Task Priority:" VerticalAlignment="Center"/>
                                 <FontIcon Glyph="&#xE946;" FontSize="12" VerticalAlignment="Center" Opacity="0.6" Tapped="InfoIcon_Tapped"
                                           ToolTipService.ToolTip="Sets the Windows thread scheduling priority for the task process. Higher priority tasks get more CPU time. 'Normal (7)' is recommended for most tasks; avoid Realtime unless absolutely necessary as it can starve other system processes."/>
                             </StackPanel>
@@ -1082,15 +1082,15 @@
                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="24,0,0,0">
                         <TextBox x:Name="EditTaskRestartInterval" PlaceholderText="e.g. 1 minute" Width="120"/>
                         <TextBlock Text="(e.g. 30s, 1m, 5m)" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7"/>
-                        <TextBlock Text="Attempt to restart up to:" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="DlgRestartUpTo" Text="Attempt to restart up to:" VerticalAlignment="Center"/>
                         <NumberBox x:Name="EditTaskRestartCount" Width="80" Value="3" Minimum="0" Maximum="999"/>
-                        <TextBlock Text="times" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="DlgRestartTimes" Text="times" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
                 
                 <!-- User Context Section -->
                 <Rectangle Height="2" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,12,0,4"/>
-                <TextBlock Text="User Context" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,12,0,4"/>
+                <TextBlock x:Name="DlgUserContextTitle" Text="User Context" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,12,0,4"/>
                 <StackPanel Spacing="8">
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <RadioButton x:Name="RunAsCurrentUser" Content="Run as current user" GroupName="UserContext" IsChecked="True" Checked="UserContextRadio_Checked"/>

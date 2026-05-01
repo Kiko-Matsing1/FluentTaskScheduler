@@ -323,7 +323,46 @@
   <data name="Dashboard.AllCategories" xml:space="preserve"><value>全部分类</value></data>
   <data name="Dashboard.Today" xml:space="preserve"><value>今天</value></data>
   <data name="Dashboard.Unknown" xml:space="preserve"><value>未知</value></data>
+
+  <data name="Dialog.TaskName" xml:space="preserve"><value>任务名称</value></data>
+  <data name="Dialog.Description" xml:space="preserve"><value>描述</value></data>
+  <data name="Dialog.Author" xml:space="preserve"><value>作者</value></data>
+  <data name="Dialog.Category" xml:space="preserve"><value>分类</value></data>
+  <data name="Dialog.Tags" xml:space="preserve"><value>标签</value></data>
+  <data name="Dialog.Enabled" xml:space="preserve"><value>已启用</value></data>
+  <data name="Dialog.TriggerType" xml:space="preserve"><value>触发器类型</value></data>
+  <data name="Dialog.Trigger.Daily" xml:space="preserve"><value>每天</value></data>
+  <data name="Dialog.Trigger.Weekly" xml:space="preserve"><value>每周</value></data>
+  <data name="Dialog.Trigger.Monthly" xml:space="preserve"><value>每月</value></data>
+  <data name="Dialog.Trigger.AtLogon" xml:space="preserve"><value>登录时</value></data>
+  <data name="Dialog.Trigger.AtStartup" xml:space="preserve"><value>系统启动时</value></data>
+  <data name="Dialog.Trigger.OneTime" xml:space="preserve"><value>一次性</value></data>
+  <data name="Dialog.Trigger.OnEvent" xml:space="preserve"><value>发生事件时</value></data>
+  <data name="Dialog.Trigger.Session" xml:space="preserve"><value>锁定/解锁工作站时</value></data>
+  <data name="Dialog.RandomDelay" xml:space="preserve"><value>延迟任务最多（随机延迟）：</value></data>
+  <data name="Dialog.StopAfter" xml:space="preserve"><value>如果运行时间超过则停止任务：</value></data>
+  <data name="Dialog.ProgramScript" xml:space="preserve"><value>程序 / 脚本</value></data>
+  <data name="Dialog.Arguments" xml:space="preserve"><value>参数（可选）</value></data>
+  <data name="Dialog.WorkingDir" xml:space="preserve"><value>运行位置（可选）</value></data>
+  <data name="Dialog.PsTip" xml:space="preserve"><value>提示：对于 PowerShell 脚本，请使用 'powershell.exe' 作为程序，'-ExecutionPolicy Bypass -File "C:\路径\脚本.ps1"' 作为参数</value></data>
+  <data name="Dialog.HighPriv" xml:space="preserve"><value>以最高权限运行</value></data>
+  <data name="Dialog.Hidden" xml:space="preserve"><value>隐藏任务</value></data>
+  <data name="Dialog.DeleteExpired" xml:space="preserve"><value>如果任务不再计划运行则删除</value></data>
+  <data name="Dialog.HardTerminate" xml:space="preserve"><value>允许强制终止任务</value></data>
+  <data name="Dialog.MultiInstance" xml:space="preserve"><value>如果任务已在运行：</value></data>
+  <data name="Dialog.Multi.Ignore" xml:space="preserve"><value>不启动新实例</value></data>
+  <data name="Dialog.Multi.Parallel" xml:space="preserve"><value>并行运行新实例</value></data>
+  <data name="Dialog.Multi.Queue" xml:space="preserve"><value>将新实例排入队列</value></data>
+  <data name="Dialog.Multi.Stop" xml:space="preserve"><value>停止现有实例</value></data>
+  <data name="Dialog.Priority" xml:space="preserve"><value>任务优先级：</value></data>
+  <data name="Dialog.RestartUpTo" xml:space="preserve"><value>尝试重启最多：</value></data>
+  <data name="Dialog.RestartTimes" xml:space="preserve"><value>次</value></data>
+  <data name="Dialog.UserContext" xml:space="preserve"><value>用户上下文</value></data>
+  <data name="Dialog.RunAsCurrent" xml:space="preserve"><value>以当前用户身份运行</value></data>
+  <data name="Dialog.RunAsSpecific" xml:space="preserve"><value>以指定用户身份运行</value></data>
+  <data name="Dialog.RunAsSystem" xml:space="preserve"><value>以 SYSTEM 身份运行（需要管理员权限）</value></data>
 </root>
+
 
 
 
