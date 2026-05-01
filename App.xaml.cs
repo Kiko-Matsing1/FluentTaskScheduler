@@ -56,12 +56,8 @@ namespace FluentTaskScheduler
 
         public App()
         {
-            // Force English language
-            try
-            {
-                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "en-US";
-            }
-            catch { }
+            Services.LocalizationService.Initialize();
+            Services.LocalizationService.LanguageChanged += LocalizationService_LanguageChanged;
 
             // Handle toast notification activation (e.g. clicking the "minimized to tray" notification)
             ToastNotificationManagerCompat.OnActivated += OnToastActivated;
@@ -74,6 +70,36 @@ namespace FluentTaskScheduler
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 #pragma warning restore CS8622
             this.UnhandledException += App_UnhandledException;
+        }
+
+        private void LocalizationService_LanguageChanged(object? sender, EventArgs e)
+        {
+            foreach (var rec in _windows)
+            {
+                try
+                {
+                    rec.Win.DispatcherQueue.TryEnqueue(() =>
+                    {
+                        if (rec.Win.Content is Frame rootFrame)
+                        {
+                            if (rootFrame.Content is MainPage mainPage)
+                            {
+                                mainPage.RefreshLocalizedUi();
+                            }
+                            else
+                            {
+                                rootFrame.Navigate(typeof(MainPage));
+                            }
+                        }
+
+                        rec.Win.Title = GetWindowTitle(rec.Name);
+                    });
+                }
+                catch
+                {
+                    // Ignore window refresh issues and continue.
+                }
+            }
         }
 
         private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
@@ -299,7 +325,7 @@ namespace FluentTaskScheduler
             string name = _windowCounter == 1 ? "Window 1" : $"Window {_windowCounter}";
 
             var win = new Window();
-            win.Title = _windowCounter == 1 ? "FluentTaskScheduler" : $"FluentTaskScheduler — {name}";
+            win.Title = GetWindowTitle(name);
 
             var rec = new WindowRecord(name, win);
             _windows.Add(rec);
@@ -369,6 +395,17 @@ namespace FluentTaskScheduler
             };
 
             win.Activate();
+        }
+
+        private static string GetWindowTitle(string windowName)
+        {
+            string appTitle = Services.LocalizationService.GetString("App.WindowTitle", "FluentTaskScheduler");
+            if (string.Equals(windowName, "Window 1", StringComparison.OrdinalIgnoreCase))
+            {
+                return appTitle;
+            }
+
+            return $"{appTitle} — {windowName}";
         }
 
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
@@ -516,10 +553,14 @@ namespace FluentTaskScheduler
                     {
                         var dialog = new ContentDialog
                         {
-                            Title = "Update Available",
-                            Content = $"Version {result.NewVersion} has been downloaded and is ready to install.\nRestart now to apply the update?",
-                            PrimaryButtonText = "Restart Now",
-                            CloseButtonText = "Later",
+                            Title = Services.LocalizationService.GetString("Dialog.UpdateAvailable.Title", "Update Available"),
+                            Content = string.Format(
+                                Services.LocalizationService.GetString(
+                                    "Dialog.UpdateAvailable.ContentFormat",
+                                    "Version {0} has been downloaded and is ready to install.\nRestart now to apply the update?"),
+                                result.NewVersion),
+                            PrimaryButtonText = Services.LocalizationService.GetString("Dialog.UpdateAvailable.RestartNow", "Restart Now"),
+                            CloseButtonText = Services.LocalizationService.GetString("Dialog.Common.Later", "Later"),
                             XamlRoot = m_window.Content?.XamlRoot,
                             RequestedTheme = SS.Theme
                         };

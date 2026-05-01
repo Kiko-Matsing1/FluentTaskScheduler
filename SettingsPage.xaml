@@ -29,37 +29,37 @@
                         Padding="0">
             
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="Appearance" Content="Appearance" IsSelected="True">
+                <NavigationViewItem x:Name="NavAppearanceItem" Tag="Appearance" Content="Appearance" IsSelected="True">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE790;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Notifications" Content="Notifications">
+                <NavigationViewItem x:Name="NavNotificationsItem" Tag="Notifications" Content="Notifications">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE7E7;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="System" Content="System">
+                <NavigationViewItem x:Name="NavSystemItem" Tag="System" Content="System">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE770;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Advanced" Content="Advanced">
+                <NavigationViewItem x:Name="NavAdvancedItem" Tag="Advanced" Content="Advanced">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE90F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Data" Content="Data">
+                <NavigationViewItem x:Name="NavDataItem" Tag="Data" Content="Data">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8B5;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Categories" Content="Categories &amp; Tags">
+                <NavigationViewItem x:Name="NavCategoriesItem" Tag="Categories" Content="Categories &amp; Tags">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8EC;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="About" Content="About">
+                <NavigationViewItem x:Name="NavAboutItem" Tag="About" Content="About">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE946;"/>
                     </NavigationViewItem.Icon>
@@ -74,7 +74,7 @@
 
                     <!-- ── Appearance ── -->
                     <StackPanel x:Name="PanelAppearance" Spacing="4">
-                        <TextBlock Text="Appearance" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="AppearanceHeaderText" Text="Appearance" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <Grid>
@@ -88,6 +88,20 @@
                                     <ComboBoxItem Content="Light"/>
                                     <ComboBoxItem Content="Dark"/>
                                     <ComboBoxItem Content="System Default"/>
+                                </ComboBox>
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                    <TextBlock x:Name="LanguageTitleText" Text="Language" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    <TextBlock x:Name="LanguageDescriptionText" Text="Choose the display language for the app." Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <ComboBox x:Name="LanguageComboBox" Grid.Column="1" VerticalAlignment="Center" Width="160" SelectionChanged="LanguageComboBox_SelectionChanged">
+                                    <ComboBoxItem Tag="en-US" Content="English"/>
+                                    <ComboBoxItem Tag="zh-CN" Content="简体中文"/>
                                 </ComboBox>
                             </Grid>
                         </Border>
@@ -119,7 +133,7 @@
 
                     <!-- ── Notifications ── -->
                     <StackPanel x:Name="PanelNotifications" Spacing="4" Visibility="Collapsed">
-                        <TextBlock Text="Notifications" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="NotificationsHeaderText" Text="Notifications" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <Grid>
@@ -166,7 +180,7 @@
 
                     <!-- ── System ── -->
                     <StackPanel x:Name="PanelSystem" Spacing="4" Visibility="Collapsed">
-                        <TextBlock Text="System" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="SystemHeaderText" Text="System" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <Grid>
@@ -219,7 +233,7 @@
 
                     <!-- ── Advanced ── -->
                     <StackPanel x:Name="PanelAdvanced" Spacing="4" Visibility="Collapsed">
-                        <TextBlock Text="Advanced" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="AdvancedHeaderText" Text="Advanced" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <Grid>
@@ -276,7 +290,7 @@
 
                     <!-- ── Data ── -->
                     <StackPanel x:Name="PanelData" Spacing="4" Visibility="Collapsed">
-                        <TextBlock Text="Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="DataHeaderText" Text="Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <Grid>
@@ -303,7 +317,7 @@
 
                     <!-- ── Categories & Tags ── -->
                     <StackPanel x:Name="PanelCategories" Spacing="16" Visibility="Collapsed">
-                        <TextBlock Text="Categories &amp; Tags" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="CategoriesHeaderText" Text="Categories &amp; Tags" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <!-- Categories Section -->
                         <Border Style="{StaticResource SettingsCardStyle}">
@@ -382,7 +396,7 @@
 
                     <!-- ── About ── -->
                     <StackPanel x:Name="PanelAbout" Spacing="4" Visibility="Collapsed">
-                        <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="AboutHeaderText" Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <Grid>
