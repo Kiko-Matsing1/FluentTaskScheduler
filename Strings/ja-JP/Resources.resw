@@ -483,4 +483,24 @@
   <data name="Settings.Lead.10m" xml:space="preserve"><value>10分前</value></data>
   <data name="Settings.Lead.15m" xml:space="preserve"><value>15分前</value></data>
   <data name="Settings.Lead.30m" xml:space="preserve"><value>30分前</value></data>
+  <data name="QuickActions.Title.Text" xml:space="preserve"><value>クイックアクション</value></data>
+  <data name="QuickActions.Description.Text" xml:space="preserve"><value>ワンクリックで一般的なシステムメンテナンスのタスクを実行します。</value></data>
+  <data name="QuickActions.FlushDNS.Title" xml:space="preserve"><value>DNSキャッシュのクリア</value></data>
+  <data name="QuickActions.FlushDNS.Desc" xml:space="preserve"><value>DNSリゾルバーキャッシュを消去します。</value></data>
+  <data name="QuickActions.ClearTemp.Title" xml:space="preserve"><value>一時ファイルのクリーンアップ</value></data>
+  <data name="QuickActions.ClearTemp.Desc" xml:space="preserve"><value>一時フォルダーからファイルを削除します。</value></data>
+  <data name="QuickActions.RestartExplorer.Title" xml:space="preserve"><value>エクスプローラーの再起動</value></data>
+  <data name="QuickActions.RestartExplorer.Desc" xml:space="preserve"><value>Windowsエクスプローラーのプロセスを再起動します。</value></data>
+  <data name="QuickActions.IPReleaseRenew.Title" xml:space="preserve"><value>IPアドレスの更新</value></data>
+  <data name="QuickActions.IPReleaseRenew.Desc" xml:space="preserve"><value>現在のIPアドレスを解放して更新します。</value></data>
+  <data name="QuickActions.SfcScannow.Title" xml:space="preserve"><value>システムファイルチェッカー (SFC)</value></data>
+  <data name="QuickActions.SfcScannow.Desc" xml:space="preserve"><value>破損したシステムファイルをスキャンして修復します（管理者権限が必要）。</value></data>
+  <data name="QuickActions.DismHealth.Title" xml:space="preserve"><value>DISMヘルスチェック</value></data>
+  <data name="QuickActions.DismHealth.Desc" xml:space="preserve"><value>コンポーネントストアの破損をチェックします（管理者権限が必要）。</value></data>
+  <data name="QuickActions.RunBtn" xml:space="preserve"><value>実行</value></data>
+  <data name="QuickActions.Status.Running" xml:space="preserve"><value>実行中...</value></data>
+  <data name="QuickActions.Status.Success" xml:space="preserve"><value>成功</value></data>
+  <data name="QuickActions.Status.Error" xml:space="preserve"><value>エラー</value></data>
+  <data name="Main.Nav.QuickActions" xml:space="preserve"><value>クイックアクション</value></data>
+  <data name="Main.Header.QuickActions" xml:space="preserve"><value>クイックアクション</value></data>
 </root>

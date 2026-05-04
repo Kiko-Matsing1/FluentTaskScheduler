@@ -1,6 +1,8 @@
 # To Do:
 
-1. **_More TBD_**
+1. **System Maintenance Quick Actions**: Because clicking "Flush DNS" manually is way too much work.
+2. **Integrated Script Editor**: A real editor, because who doesn't love writing code in a tiny text box?
+3. **PowerShell Companion Module**: For the people who hate GUIs but use a GUI task scheduler anyway.
 
 # Done for next release:
 

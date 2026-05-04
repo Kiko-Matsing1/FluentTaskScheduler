@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
+using FluentTaskScheduler.ViewModels;
 
 namespace FluentTaskScheduler.Converters
 {
@@ -96,5 +97,27 @@ namespace FluentTaskScheduler.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
             => value is not true;
+    }
+
+    public class RunningToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is QuickActionStatus status)
+                return status == QuickActionStatus.Running ? Visibility.Visible : Visibility.Collapsed;
+            return Visibility.Collapsed;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
+    }
+
+    public class InverseStatusToBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is QuickActionStatus status)
+                return status != QuickActionStatus.Running;
+            return true;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
     }
 }

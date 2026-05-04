@@ -138,14 +138,6 @@
                 </StackPanel>
             </NavigationView.PaneCustomContent>
 
-            <NavigationView.MenuItems>
-                <NavigationViewItemSeparator />
-                <NavigationViewItem x:Name="NavDashboard" Tag="Dashboard" Icon="ViewAll" Content="Dashboard" />
-                <NavigationViewItem x:Name="NavScriptLibrary" Tag="ScriptLibrary" Icon="Library" Content="Script Library" />
-                <NavigationViewItem x:Name="NavAdd" Tag="Add" Icon="Add" Content="New Task" SelectsOnInvoked="False" />
-                <NavigationViewItemSeparator />
-            </NavigationView.MenuItems>
-
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}" Style="{StaticResource TitleTextBlockStyle}" Margin="-24,0,0,0" VerticalAlignment="Center"/>
@@ -153,10 +145,18 @@
             </NavigationView.HeaderTemplate>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Name="NavAllTasks" x:Uid="NavAllTasks" Tag="all" Icon="List" Content="All Tasks" IsSelected="True"/>
+                <NavigationViewItem x:Name="NavAdd" Tag="Add" Icon="Add" Content="New Task" SelectsOnInvoked="False" />
+                <NavigationViewItem x:Name="NavAllTasks" x:Uid="NavAllTasks" Tag="all" Icon="List" Content="All Tasks"/>
                 <NavigationViewItem x:Name="NavRunning" x:Uid="NavRunning" Tag="running" Icon="Play" Content="Running"/>
                 <NavigationViewItem x:Name="NavEnabled" x:Uid="NavEnabled" Content="Enabled" Icon="Accept" Tag="enabled" />
                 <NavigationViewItem x:Name="NavDisabled" Content="Disabled" Icon="Cancel" Tag="disabled" />
+                <NavigationViewItem x:Name="NavDashboard" Tag="Dashboard" Icon="ViewAll" Content="Dashboard" />
+                <NavigationViewItem x:Name="NavQuickActions" x:Uid="Main.Nav.QuickActions" Tag="QuickActions" Content="Quick Actions">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEC4A;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavScriptLibrary" Tag="ScriptLibrary" Icon="Library" Content="Script Library" />
                 <NavigationViewItem x:Name="NavSettings" Tag="settings" Content="Settings"
                                    PointerEntered="Settings_PointerEntered"
                                    PointerExited="Settings_PointerExited">

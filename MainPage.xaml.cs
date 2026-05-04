@@ -82,6 +82,7 @@ namespace FluentTaskScheduler
         private void ApplyLocalizedUi()
         {
             NavDashboard.Content = L("Main.Nav.Dashboard", "Dashboard");
+            NavQuickActions.Content = L("Main.Nav.QuickActions", "Quick Actions");
             NavScriptLibrary.Content = L("Main.Nav.ScriptLibrary", "Script Library");
             NavAdd.Content = L("Main.Nav.NewTask", "New Task");
             NavAllTasks.Content = L("Main.Nav.AllTasks", "All Tasks");
@@ -311,6 +312,7 @@ namespace FluentTaskScheduler
                 NavView.Header = tag switch
                 {
                     "Dashboard" => L("Main.Header.Dashboard", "Dashboard"),
+                    "QuickActions" => L("Main.Header.QuickActions", "Quick Actions"),
                     "ScriptLibrary" => L("Main.Header.ScriptLibrary", "Script Library"),
                     "settings" => L("Main.Header.Settings", "Settings"),
                     _ => L("Main.Header.ScheduledTasks", "Scheduled Tasks")
@@ -614,6 +616,14 @@ namespace FluentTaskScheduler
                     TasksViewGrid.Visibility = Visibility.Collapsed;
                     ContentFrame.Visibility = Visibility.Visible;
                     ContentFrame.Navigate(typeof(ScriptLibraryPage), this);
+                    FolderTreeView.SelectedItem = null;
+                }
+                else if (tag == "QuickActions")
+                {
+                    NavView.Header = L("Main.Header.QuickActions", "Quick Actions");
+                    TasksViewGrid.Visibility = Visibility.Collapsed;
+                    ContentFrame.Visibility = Visibility.Visible;
+                    ContentFrame.Navigate(typeof(QuickActionsPage));
                     FolderTreeView.SelectedItem = null;
                 }
                 else
