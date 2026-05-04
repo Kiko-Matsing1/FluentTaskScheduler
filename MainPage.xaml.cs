@@ -314,6 +314,7 @@ namespace FluentTaskScheduler
                     "Dashboard" => L("Main.Header.Dashboard", "Dashboard"),
                     "QuickActions" => L("Main.Header.QuickActions", "Quick Actions"),
                     "ScriptLibrary" => L("Main.Header.ScriptLibrary", "Script Library"),
+                    "ScriptEditor" => L("Main.Header.ScriptEditor", "Script Editor"),
                     "settings" => L("Main.Header.Settings", "Settings"),
                     _ => L("Main.Header.ScheduledTasks", "Scheduled Tasks")
                 };
@@ -616,6 +617,14 @@ namespace FluentTaskScheduler
                     TasksViewGrid.Visibility = Visibility.Collapsed;
                     ContentFrame.Visibility = Visibility.Visible;
                     ContentFrame.Navigate(typeof(ScriptLibraryPage), this);
+                    FolderTreeView.SelectedItem = null;
+                }
+                else if (tag == "ScriptEditor")
+                {
+                    NavView.Header = L("Main.Header.ScriptEditor", "Script Editor");
+                    TasksViewGrid.Visibility = Visibility.Collapsed;
+                    ContentFrame.Visibility = Visibility.Visible;
+                    ContentFrame.Navigate(typeof(ScriptEditorPage));
                     FolderTreeView.SelectedItem = null;
                 }
                 else if (tag == "QuickActions")

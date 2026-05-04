@@ -157,6 +157,7 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="NavScriptLibrary" Tag="ScriptLibrary" Icon="Library" Content="Script Library" />
+                <NavigationViewItem x:Name="NavScriptEditor" Tag="ScriptEditor" Icon="Edit" Content="Script Editor" />
                 <NavigationViewItem x:Name="NavSettings" Tag="settings" Content="Settings"
                                    PointerEntered="Settings_PointerEntered"
                                    PointerExited="Settings_PointerExited">

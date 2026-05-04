@@ -502,5 +502,12 @@
   <data name="QuickActions.Status.Success" xml:space="preserve"><value>成功</value></data>
   <data name="QuickActions.Status.Error" xml:space="preserve"><value>エラー</value></data>
   <data name="Main.Nav.QuickActions" xml:space="preserve"><value>クイックアクション</value></data>
-  <data name="Main.Header.QuickActions" xml:space="preserve"><value>クイックアクション</value></data>
+  <data name="Main.Header.ScriptEditor.Text" xml:space="preserve"><value>スクリプトエディタ</value></data>
+  <data name="ScriptEditor.Title.Text" xml:space="preserve"><value>スクリプトエディタ</value></data>
+  <data name="ScriptEditor.RunBtn.Label" xml:space="preserve"><value>実行</value></data>
+  <data name="ScriptEditor.StopBtn.Label" xml:space="preserve"><value>停止</value></data>
+  <data name="ScriptEditor.SaveBtn.Label" xml:space="preserve"><value>ライブラリに保存</value></data>
+  <data name="ScriptEditor.ClearBtn.Label" xml:space="preserve"><value>コンソールをクリア</value></data>
+  <data name="ScriptEditor.OutputHeader.Text" xml:space="preserve"><value>出力コンソール</value></data>
+  <data name="ScriptEditor.Placeholder.PlaceholderText" xml:space="preserve"><value>ここにPowerShellスクリプトを入力してください...</value></data>
 </root>
