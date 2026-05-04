@@ -121,68 +121,50 @@ namespace FluentTaskScheduler
             e.Handled = true; 
         }
 
-        private void LogCrash(Exception? ex, string source)
+        public void LogCrash(Exception? ex, string source)
         {
             string errorMessage = $"[{DateTime.Now}] [{source}] Error: {ex?.Message}\r\nStack Trace: {ex?.StackTrace ?? "No stack"}\r\n\r\n";
             Services.LogService.WriteCrash(ex, source);
 
-            // Attempt to show dialog if window exists
             if (m_window != null)
             {
-                try
+                m_window.DispatcherQueue.TryEnqueue(async () =>
                 {
-                    var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-                    if (dispatcher != null)
+                    try
                     {
-                        // Fire and forget, we just want to see it
-                        dispatcher.TryEnqueue(async () =>
+                        var reb = new RichEditBox
                         {
-                            try
-                            {
-                                var reb = new RichEditBox
-                                {
-                                    IsReadOnly = true,
-                                    AcceptsReturn = true,
-                                    Width = 500,
-                                    Height = 300,
-                                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                                    Margin = new Thickness(0, 10, 0, 10),
-                                    FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Consolas")
-                                };
-                                reb.Document.SetText(TextSetOptions.None, errorMessage);
+                            IsReadOnly = true,
+                            AcceptsReturn = true,
+                            Width = 500,
+                            Height = 300,
+                            HorizontalAlignment = HorizontalAlignment.Stretch,
+                            Margin = new Thickness(0, 10, 0, 10),
+                            FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Consolas")
+                        };
+                        reb.Document.SetText(TextSetOptions.None, errorMessage);
 
-                                var dialog = new ContentDialog
-                                {
-                                    Title = Services.LocalizationService.GetString("Dialog.Crash.Title", "Unhandled Exception"),
-                                    Content = reb,
-                                    PrimaryButtonText = Services.LocalizationService.GetString("Dialog.Crash.Copy", "Copy to Clipboard"),
-                                    CloseButtonText = Services.LocalizationService.GetString("Dialog.Common.Close", "Close"),
-                                    XamlRoot = m_window.Content?.XamlRoot,
-                                    RequestedTheme = SS.Theme
-                                };
+                        var dialog = new ContentDialog
+                        {
+                            Title = Services.LocalizationService.GetString("Dialog.Crash.Title", "Unhandled Exception"),
+                            Content = reb,
+                            PrimaryButtonText = Services.LocalizationService.GetString("Dialog.Crash.Copy", "Copy to Clipboard"),
+                            CloseButtonText = Services.LocalizationService.GetString("Dialog.Common.Close", "Close"),
+                            XamlRoot = m_window.Content?.XamlRoot,
+                            RequestedTheme = SS.Theme
+                        };
 
-                                dialog.PrimaryButtonClick += (s, args) =>
-                                {
-                                    var dataPackage = new DataPackage();
-                                    dataPackage.SetText(errorMessage);
-                                    Clipboard.SetContent(dataPackage);
-                                    
-                                    // Optionally prevent closing if you want the user to stay, 
-                                    // but usually copying is the final action.
-                                };
+                        dialog.PrimaryButtonClick += (s, args) =>
+                        {
+                            var dataPackage = new DataPackage();
+                            dataPackage.SetText(errorMessage);
+                            Clipboard.SetContent(dataPackage);
+                        };
 
-                                await dialog.ShowAsync();
-                            }
-                            catch (Exception nestedEx)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Failed to show crash dialog: {nestedEx.Message}");
-                            }
-                        });
-                        // Keep process alive briefly?
-                        System.Threading.Thread.Sleep(5000); 
+                        await dialog.ShowAsync();
                     }
-                }
-                catch { }
+                    catch { }
+                });
             }
         }
 
