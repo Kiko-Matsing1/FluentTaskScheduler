@@ -1,7 +1,6 @@
 # To Do:
 
-1. 
-2. **PowerShell Companion Module**: For the people who hate GUIs but use a GUI task scheduler anyway.
+1. ***More TBD***
 
 # Done for next release:
 

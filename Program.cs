@@ -14,19 +14,24 @@ namespace FluentTaskScheduler
         private static extern void XamlCheckProcessRequirements();
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr AddDllDirectory(string lpPathName);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool SetDefaultDllDirectories(uint directoryFlags);
 
         [STAThread]
         static void Main(string[] args)
         {
+            // Set the DLL search path to include the application directory.
+            // This is critical for ARM64 and self-contained builds where native DLLs
+            // might not be found by the default search logic.
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+            AddDllDirectory(appDir);
+            SetDefaultDllDirectories(0x00001000); // LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
+
             // Initialize ComWrappers as early as possible for WinRT support.
             // This MUST be done before any WinRT types are accessed or the bootstrapper runs.
             WinRT.ComWrappersSupport.InitializeComWrappers();
-
-            // Ensure the application directory is in the DLL search path.
-            // This is critical for single-file extraction scenarios where native DLLs
-            // might be in a temp folder.
-            SetDefaultDllDirectories(0x00001000); // LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
 
             // VeloPack: Handle install/uninstall/update hooks before anything else.
             // In a machine-wide install (C:\Program Files), non-admin users don't have write access,
@@ -67,9 +72,11 @@ namespace FluentTaskScheduler
             try
             {
                 // XamlCheckProcessRequirements is a native call in Microsoft.ui.xaml.dll.
-                // Calling it here ensures the DLL is loaded and dependencies are checked.
-                // This is especially important for ARM64 and Single-File extraction.
-                XamlCheckProcessRequirements();
+                // We check if the DLL exists first to avoid a hard DllNotFoundException on some ARM64 systems.
+                if (System.IO.File.Exists(System.IO.Path.Combine(appDir, "Microsoft.ui.xaml.dll")))
+                {
+                    XamlCheckProcessRequirements();
+                }
             }
             catch (Exception ex)
             {
