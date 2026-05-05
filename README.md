@@ -2,6 +2,10 @@
 
 A modern, powerful, and intuitive Windows task scheduling application built with WinUI 3 and .NET 8.
 
+> [!IMPORTANT]
+> **AI Development Disclaimer**: This application was developed primarily with the assistance of Artificial Intelligence. Users should be aware that AI-generated code may contain unforeseen bugs, logic errors, or security vulnerabilities. Please test all tasks in a safe environment before deployment. The developer assumes no responsibility for any system instability or data loss resulting from the use of this software.
+
+
 ![App Icon](Assets/Logo.png)
 
 ## Overview
