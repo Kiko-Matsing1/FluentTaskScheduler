@@ -12,6 +12,25 @@ FluentTaskScheduler is a professional-grade wrapper for the Windows Task Schedul
 If you like what this project is for, I would really appreciate a (optional!) donation:
 <br><a href="https://buymeacoffee.com/t.r.g"><img src="/Assets/yellow.png" alt="Buy Me a Coffee Donation Link" width="auto" height="75"></a>
 
+## Screenshots
+
+<p align="center">
+  <img src="Assets/1-Overview.png" width="400" alt="Main Interface">
+  <img src="Assets/2-Dashboard.png" width="400" alt="Dashboard">
+</p>
+<p align="center">
+  <img src="Assets/3-QuickActions.png" width="400" alt="Quick Actions">
+  <img src="Assets/4-ScriptLibrary.png" width="400" alt="Script Library">
+</p>
+<p align="center">
+  <img src="Assets/5-ScriptEditor.png" width="400" alt="Script Editor">
+  <img src="Assets/6-Settings.png" width="400" alt="Settings">
+</p>
+<p align="center">
+  <img src="Assets/7-Add-And-Edit.png" width="400" alt="Task Editor">
+</p>
+
+
 ## Installation instructions
 ### Manually
 Go to the [Releases Page](https://github.com/TRGamer-tech/FluentTaskScheduler/releases) and download the newest version. Two formats are available per architecture (x64 / ARM64):
