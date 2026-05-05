@@ -2,15 +2,15 @@
 
 A modern, powerful, and intuitive Windows task scheduling application built with WinUI 3 and .NET 8.
 
-> [!IMPORTANT]
-> **AI Development Disclaimer**: This application was developed primarily with the assistance of Artificial Intelligence. Users should be aware that AI-generated code may contain unforeseen bugs, logic errors, or security vulnerabilities. Please test all tasks in a safe environment before deployment. The developer assumes no responsibility for any system instability or data loss resulting from the use of this software.
-
 
 ![App Icon](Assets/Logo.png)
 
 ## Overview
 
 FluentTaskScheduler is a professional-grade wrapper for the Windows Task Scheduler API, designed with Microsoft's modern Fluent Design System. It simplifies the creation and management of automation tasks, offering a sleek alternative to the legacy Windows Task Scheduler.
+
+> [!IMPORTANT]
+> **AI Development Disclaimer**: This application was developed primarily with the assistance of Artificial Intelligence. Users should be aware that AI-generated code may contain unforeseen bugs, logic errors, or security vulnerabilities. Please test all tasks in a safe environment before deployment. The developer assumes no responsibility for any system instability or data loss resulting from the use of this software.
 
 ### Donate on Buy me a coffee
 If you like what this project is for, I would really appreciate a (optional!) donation:
