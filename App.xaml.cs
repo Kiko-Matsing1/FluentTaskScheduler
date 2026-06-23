@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.AppNotifications;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -32,8 +31,6 @@ namespace FluentTaskScheduler
         private static System.Threading.EventWaitHandle? _showInstanceEvent;
 
         public static Window? m_window => _windows.Count > 0 ? _windows[0].Win : null;
-
-        // Fixed S2325: Made MainWindow static
         public static Window? MainWindow => m_window;
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -61,9 +58,6 @@ namespace FluentTaskScheduler
             Services.LocalizationService.Initialize();
             Services.LocalizationService.LanguageChanged += LocalizationService_LanguageChanged;
 
-            AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
-            AppNotificationManager.Default.Register();
-
             this.InitializeComponent();
 
 #pragma warning disable CS8622
@@ -73,7 +67,6 @@ namespace FluentTaskScheduler
             this.UnhandledException += App_UnhandledException;
         }
 
-        // Fixed S2325: Made LocalizationService_LanguageChanged static
         private static void LocalizationService_LanguageChanged(object? sender, EventArgs e)
         {
             foreach (var rec in _windows)
@@ -179,7 +172,6 @@ namespace FluentTaskScheduler
             InitializeGuiMode();
         }
 
-        // Fixed S2325: Made HandleCommandLineMode static
         private static void HandleCommandLineMode(string[] args)
         {
             AttachConsole(ATTACH_PARENT_PROCESS);
@@ -368,6 +360,23 @@ namespace FluentTaskScheduler
             GC.KeepAlive(_instanceMutex);
         }
 
+        /// <summary>
+        /// Global, cross-thread restoration entry point requested by CodeRabbit review logs.
+        /// </summary>
+        public static void RestoreMainWindow()
+        {
+            var dispatcherQueue = m_window?.DispatcherQueue;
+            dispatcherQueue?.TryEnqueue(() =>
+            {
+                var win = _windows.FindLast(r => r.IsHidden)?.Win ?? m_window;
+                if (win != null)
+                {
+                    win.AppWindow.Show();
+                    win.Activate();
+                }
+            });
+        }
+
         private void CreateAndRegisterWindow()
         {
             _windowCounter++;
@@ -396,7 +405,6 @@ namespace FluentTaskScheduler
             win.Activate();
         }
 
-        // Fixed S2325: Made ConfigureWindowIcon static
         private static void ConfigureWindowIcon(Window win)
         {
             try
@@ -441,7 +449,6 @@ namespace FluentTaskScheduler
             }
         }
 
-        // Fixed S2325: Made ConfigureWindowClosing static
         private static void ConfigureWindowClosing(Window win, WindowRecord rec)
         {
             win.AppWindow.Closing += (sender, args) =>
@@ -472,21 +479,6 @@ namespace FluentTaskScheduler
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
             // Extension callback interface hook setup
-        }
-
-        // Fixed S2325: Made OnNotificationInvoked static
-        private static void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
-        {
-            if (e.Arguments.TryGetValue("action", out string? action) && action == "show")
-            {
-                var dispatcherQueue = m_window?.DispatcherQueue;
-                dispatcherQueue?.TryEnqueue(() =>
-                {
-                    var win = _windows.FindLast(r => r.IsHidden)?.Win ?? m_window;
-                    win?.AppWindow.Show();
-                    win?.Activate();
-                });
-            }
         }
 
         public static void ApplySmoothScrolling(bool enable)
@@ -557,7 +549,6 @@ namespace FluentTaskScheduler
             }
         }
 
-        // Fixed S2325: Made UpdateTitleBarTheme static
         private static void UpdateTitleBarTheme(Window win, ElementTheme theme)
         {
             var appWindow = win.AppWindow;
@@ -649,7 +640,6 @@ namespace FluentTaskScheduler
             }
         }
 
-        // Fixed S2325: Made OnNavigationFailed static
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new InvalidOperationException("Failed to load Page " + e.SourcePageType.FullName);
