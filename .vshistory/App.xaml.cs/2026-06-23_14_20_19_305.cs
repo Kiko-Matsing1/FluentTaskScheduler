@@ -425,7 +425,7 @@ namespace FluentTaskScheduler
         }
 
         // Refactored to native Windows App SDK model
-        private void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
+        private void OnNotificationInvoked(AppNotificationManager sender, AppNotificationInvokedEventArgs e)
         {
             // Native AppNotificationInvokedEventArgs parses arguments automatically into a neat IReadOnlyDictionary
             if (e.Arguments.TryGetValue("action", out string? action) && action == "show")

@@ -2,7 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.AppNotifications; // Swapped to native Windows App SDK namespace
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -22,7 +22,7 @@ namespace FluentTaskScheduler
         private sealed class WindowRecord
         {
             public string Name { get; }
-            public Window Win { get; }
+            public Window Win  { get; }
             public bool IsHidden { get; set; }
             public WindowRecord(string name, Window win) { Name = name; Win = win; }
         }
@@ -61,12 +61,11 @@ namespace FluentTaskScheduler
             Services.LocalizationService.Initialize();
             Services.LocalizationService.LanguageChanged += LocalizationService_LanguageChanged;
 
-            // Swapped to native Windows App SDK Manager and registered the manager
-            AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
-            AppNotificationManager.Default.Register();
+            // Handle toast notification activation (e.g. clicking the "minimized to tray" notification)
+            ToastNotificationManagerCompat.OnActivated += OnToastActivated;
 
             this.InitializeComponent();
-
+            
             // Global handlers
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -119,7 +118,7 @@ namespace FluentTaskScheduler
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             LogCrash(e.Exception, "Xaml.UnhandledException");
-            e.Handled = true;
+            e.Handled = true; 
         }
 
         public void LogCrash(Exception? ex, string source)
@@ -172,7 +171,7 @@ namespace FluentTaskScheduler
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             var args = Environment.GetCommandLineArgs();
-
+            
             // GUI Mode: No arguments or just the executable path
             if (args.Length > 1)
             {
@@ -182,27 +181,26 @@ namespace FluentTaskScheduler
                 // CLI Mode
                 // usage: FluentTaskScheduler.exe --run "Path"
                 string command = args[1].ToLower();
-                string? param = args.Length > 2 ? args[2] : null;
+                string? param = args.Length > 2 ? args[2] : null; 
                 bool jsonOutput = args.Contains("--json"); // Keep variable for potential future use or just ignore
 
                 var service = new global::FluentTaskScheduler.Services.TaskServiceWrapper();
-
-                try
+                
+                try 
                 {
                     if (command == "--list")
                     {
                         var tasks = service.GetAllTasks();
                         var simpleList = new System.Collections.Generic.List<object>();
-                        foreach (var t in tasks)
+                        foreach(var t in tasks)
                         {
-                            simpleList.Add(new
-                            {
-                                Name = t.Name,
-                                Path = t.Path,
-                                State = t.State,
-                                LastRun = t.LastRunTime,
-                                NextRun = t.NextRunTime
-                            });
+                                simpleList.Add(new { 
+                                Name = t.Name, 
+                                Path = t.Path, 
+                                State = t.State, 
+                                LastRun = t.LastRunTime, 
+                                NextRun = t.NextRunTime 
+                                });
                         }
                         string json = System.Text.Json.JsonSerializer.Serialize(simpleList, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
                         Console.WriteLine(json);
@@ -215,21 +213,21 @@ namespace FluentTaskScheduler
                     }
                     else if (command == "--enable" && !string.IsNullOrEmpty(param))
                     {
-                        Console.WriteLine($"Enabling task: {param}");
-                        service.EnableTask(param);
-                        Console.WriteLine("Task enabled.");
+                            Console.WriteLine($"Enabling task: {param}");
+                            service.EnableTask(param);
+                            Console.WriteLine("Task enabled.");
                     }
                     else if (command == "--disable" && !string.IsNullOrEmpty(param))
                     {
-                        Console.WriteLine($"Disabling task: {param}");
-                        service.DisableTask(param);
-                        Console.WriteLine("Task disabled.");
+                            Console.WriteLine($"Disabling task: {param}");
+                            service.DisableTask(param);
+                            Console.WriteLine("Task disabled.");
                     }
-                    else if (command == "--export-history" && !string.IsNullOrEmpty(param))
+                        else if (command == "--export-history" && !string.IsNullOrEmpty(param))
                     {
                         string output = args.Length > 4 && args[3] == "--output" ? args[4] : "history.csv";
                         Console.WriteLine($"Exporting history for {param} to {output}...");
-
+                        
                         var history = service.GetTaskHistory(param);
                         if (history != null && history.Count > 0)
                         {
@@ -371,7 +369,7 @@ namespace FluentTaskScheduler
                 {
                     if (e.DidSizeChange && !rec.IsHidden)
                     {
-                        SS.WindowWidth = s.Size.Width;
+                        SS.WindowWidth  = s.Size.Width;
                         SS.WindowHeight = s.Size.Height;
                     }
                 };
@@ -381,10 +379,10 @@ namespace FluentTaskScheduler
             Frame rootFrame = new Frame();
             rootFrame.NavigationFailed += OnNavigationFailed;
             win.Content = rootFrame;
-
+            
             // Extend into title bar
             win.ExtendsContentIntoTitleBar = true;
-
+            
             ApplyThemeToWindow(win);
             rootFrame.Navigate(typeof(MainPage));
 
@@ -424,11 +422,10 @@ namespace FluentTaskScheduler
             // Handled per-window inside CreateAndRegisterWindow
         }
 
-        // Refactored to native Windows App SDK model
-        private void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
+        private void OnToastActivated(ToastNotificationActivatedEventArgsCompat e)
         {
-            // Native AppNotificationInvokedEventArgs parses arguments automatically into a neat IReadOnlyDictionary
-            if (e.Arguments.TryGetValue("action", out string? action) && action == "show")
+            var args = ToastArguments.Parse(e.Argument);
+            if (args.TryGetValue("action", out string action) && action == "show")
             {
                 // Restore the most-recently-hidden window, or the first window
                 var win = _windows.FindLast(r => r.IsHidden)?.Win ?? m_window;

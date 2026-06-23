@@ -1,6 +1,5 @@
 using System;
-using Microsoft.Windows.AppNotifications;          // Swapped namespace
-using Microsoft.Windows.AppNotifications.Builder;  // Added for AppNotificationBuilder
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace FluentTaskScheduler.Services
 {
@@ -10,39 +9,31 @@ namespace FluentTaskScheduler.Services
         {
             if (!SettingsService.ShowNotifications) return;
 
-            var notification = new AppNotificationBuilder()
+            new ToastContentBuilder()
                 .AddText($"Task Started: {taskName}")
                 .AddText("The task has been triggered manually.")
-                .BuildNotification();
-
-            AppNotificationManager.Default.Show(notification);
+                .Show();
         }
 
         public static void ShowTaskError(string taskName, string error)
         {
             if (!SettingsService.ShowNotifications) return;
 
-            var notification = new AppNotificationBuilder()
+            new ToastContentBuilder()
                 .AddText($"Task Failed: {taskName}")
                 .AddText(error)
-                .BuildNotification();
-
-            AppNotificationManager.Default.Show(notification);
+                .Show();
         }
-
         public static void ShowUpcomingTask(string taskName, int minutesUntilRun)
         {
             if (!SettingsService.ShowNotifications || !SettingsService.EnableUpcomingReminders) return;
 
             string timeLabel = minutesUntilRun <= 1 ? "less than a minute" : $"{minutesUntilRun} minutes";
-
-            var notification = new AppNotificationBuilder()
+            new ToastContentBuilder()
                 .AddArgument("action", "show")
                 .AddText($"Upcoming Task: {taskName}")
                 .AddText($"Scheduled to run in {timeLabel}.")
-                .BuildNotification();
-
-            AppNotificationManager.Default.Show(notification);
+                .Show();
         }
 
         private static bool _trayNotificationShown = false;
@@ -52,13 +43,11 @@ namespace FluentTaskScheduler.Services
             if (_trayNotificationShown) return;
             _trayNotificationShown = true;
 
-            var notification = new AppNotificationBuilder()
+            new ToastContentBuilder()
                 .AddArgument("action", "show")
                 .AddText("FluentTaskScheduler is still running")
                 .AddText("The app has been minimized to the system tray. Click to restore, or double-click the tray icon.")
-                .BuildNotification();
-
-            AppNotificationManager.Default.Show(notification);
+                .Show();
         }
     }
 }
