@@ -36,7 +36,7 @@ namespace FluentTaskScheduler
 
         /// <summary>Backward-compat alias — still valid for file pickers, icon loading, etc.</summary>
         public static Window? m_window => _windows.Count > 0 ? _windows[0].Win : null;
-        public static Window? MainWindow => m_window;
+        public Window? MainWindow => m_window;
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string? lpModuleName);
@@ -77,7 +77,7 @@ namespace FluentTaskScheduler
             this.UnhandledException += App_UnhandledException;
         }
 
-        private static void LocalizationService_LanguageChanged(object? sender, EventArgs e)
+        private void LocalizationService_LanguageChanged(object? sender, EventArgs e)
         {
             foreach (var rec in _windows)
             {
@@ -190,7 +190,7 @@ namespace FluentTaskScheduler
         /// <summary>
         /// Refactored switch block to lower Cognitive Complexity (S3776).
         /// </summary>
-        private static void HandleCommandLineMode(string[] args)
+        private void HandleCommandLineMode(string[] args)
         {
             AttachConsole(ATTACH_PARENT_PROCESS);
             string command = args[1].ToLower();
@@ -396,7 +396,7 @@ namespace FluentTaskScheduler
             win.Activate();
         }
 
-        private static void ConfigureWindowIcon(Window win)
+        private void ConfigureWindowIcon(Window win)
         {
             try
             {
@@ -440,7 +440,7 @@ namespace FluentTaskScheduler
             }
         }
 
-        private static void ConfigureWindowClosing(Window win, WindowRecord rec)
+        private void ConfigureWindowClosing(Window win, WindowRecord rec)
         {
             win.AppWindow.Closing += (sender, args) =>
             {
@@ -474,7 +474,7 @@ namespace FluentTaskScheduler
             // Handled per-window inside CreateAndRegisterWindow
         }
 
-        private static void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
+        private void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
         {
             if (e.Arguments.TryGetValue("action", out string? action) && action == "show")
             {
@@ -483,17 +483,13 @@ namespace FluentTaskScheduler
             }
         }
 
-        public static void ApplySmoothScrolling(bool enable)
+        public void ApplySmoothScrolling(bool enable)
         {
-            // Uses LINQ to extract windows, filter out null content, and flatten all ScrollViewers into a single collection
-            var scrollViewers = _windows
-                .Select(rec => rec.Win)
-                .Where(win => win?.Content != null)
-                .SelectMany(win => FindDescendants<ScrollViewer>(win.Content));
-
-            foreach (var sv in scrollViewers)
+            foreach (var rec in _windows)
             {
-                sv.IsScrollInertiaEnabled = enable;
+                if (rec.Win?.Content == null) continue;
+                foreach (var sv in FindDescendants<ScrollViewer>(rec.Win.Content))
+                    sv.IsScrollInertiaEnabled = enable;
             }
         }
 
@@ -552,7 +548,7 @@ namespace FluentTaskScheduler
             }
         }
 
-        private static void UpdateTitleBarTheme(Window win, ElementTheme theme)
+        private void UpdateTitleBarTheme(Window win, ElementTheme theme)
         {
             var appWindow = win.AppWindow;
             if (appWindow == null) return;
@@ -643,7 +639,7 @@ namespace FluentTaskScheduler
             }
         }
 
-        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new InvalidOperationException("Failed to load Page " + e.SourcePageType.FullName);
         }

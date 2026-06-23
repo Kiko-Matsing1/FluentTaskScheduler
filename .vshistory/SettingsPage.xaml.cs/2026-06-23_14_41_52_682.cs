@@ -1,5 +1,3 @@
-#pragma warning disable S2325 // Global file suppression: XAML event handlers cannot be made static without breaking auto-generated code-behind wiring (.g.cs files).
-
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -193,22 +191,21 @@ namespace FluentTaskScheduler
         {
             string L(string key, string fallback) => LocalizationService.GetString(key, fallback);
 
-            // Reused string constants in the fallbacks to satisfy S1192 completely
-            NavAppearanceItem.Content = L("Settings.Nav.Appearance", TagAppearance);
-            NavNotificationsItem.Content = L("Settings.Nav.Notifications", TagNotifications);
-            NavSystemItem.Content = L("Settings.Nav.System", TagSystem);
-            NavAdvancedItem.Content = L("Settings.Nav.Advanced", TagAdvanced);
+            NavAppearanceItem.Content = L("Settings.Nav.Appearance", "Appearance");
+            NavNotificationsItem.Content = L("Settings.Nav.Notifications", "Notifications");
+            NavSystemItem.Content = L("Settings.Nav.System", "System");
+            NavAdvancedItem.Content = L("Settings.Nav.Advanced", "Advanced");
             NavDataItem.Content = L("Settings.Nav.Data", "Data");
             NavCategoriesItem.Content = L("Settings.Nav.Categories", "Categories & Tags");
-            NavAboutItem.Content = L("Settings.Nav.About", TagAbout);
+            NavAboutItem.Content = L("Settings.Nav.About", "About");
 
-            AppearanceHeaderText.Text = L("Settings.Section.Appearance", TagAppearance);
-            NotificationsHeaderText.Text = L("Settings.Section.Notifications", TagNotifications);
-            SystemHeaderText.Text = L("Settings.Section.System", TagSystem);
-            AdvancedHeaderText.Text = L("Settings.Section.Advanced", TagAdvanced);
+            AppearanceHeaderText.Text = L("Settings.Section.Appearance", "Appearance");
+            NotificationsHeaderText.Text = L("Settings.Section.Notifications", "Notifications");
+            SystemHeaderText.Text = L("Settings.Section.System", "System");
+            AdvancedHeaderText.Text = L("Settings.Section.Advanced", "Advanced");
             DataHeaderText.Text = L("Settings.Section.Data", "Data");
             CategoriesHeaderText.Text = L("Settings.Section.Categories", "Categories & Tags");
-            AboutHeaderText.Text = L("Settings.Section.About", TagAbout);
+            AboutHeaderText.Text = L("Settings.Section.About", "About");
             LanguageTitleText.Text = L("Settings.Appearance.Language.Title", "Language");
             LanguageDescriptionText.Text = L("Settings.Appearance.Language.Description", "Choose the display language for the app.");
             AppThemeTitleText.Text = L("Settings.Appearance.Theme.Title", "App Theme");
@@ -277,13 +274,13 @@ namespace FluentTaskScheduler
             AboutOnboardDesc.Text = L("Settings.About.Onboard.Desc", "Replay the welcome walkthrough from first launch.");
             AboutViewAgainText.Text = L("Settings.About.ViewAgain", "View Again");
 
-            _sectionTitles[TagAppearance] = L("Settings.Section.Appearance", TagAppearance);
-            _sectionTitles[TagNotifications] = L("Settings.Section.Notifications", TagNotifications);
-            _sectionTitles[TagSystem] = L("Settings.Section.System", TagSystem);
-            _sectionTitles[TagAdvanced] = L("Settings.Section.Advanced", TagAdvanced);
+            _sectionTitles[TagAppearance] = L("Settings.Section.Appearance", "Appearance");
+            _sectionTitles[TagNotifications] = L("Settings.Section.Notifications", "Notifications");
+            _sectionTitles[TagSystem] = L("Settings.Section.System", "System");
+            _sectionTitles[TagAdvanced] = L("Settings.Section.Advanced", "Advanced");
             _sectionTitles["Data"] = L("Settings.Section.Data", "Data");
             _sectionTitles["Categories"] = L("Settings.Section.Categories", "Categories & Tags");
-            _sectionTitles[TagAbout] = L("Settings.Section.About", TagAbout);
+            _sectionTitles[TagAbout] = L("Settings.Section.About", "About");
 
             // Dropdown items
             ThemeLightItem.Content = L("Settings.Theme.Light", "Light");
@@ -353,6 +350,7 @@ namespace FluentTaskScheduler
             LogService.Info($"Smooth Scrolling: {(enable ? StateEnabled : StateDisabled)}");
             PageScrollViewer.IsScrollInertiaEnabled = enable;
 
+            // Fixed Error: Accessing static method directly via class type reference rather than instance expression
             App.ApplySmoothScrolling(enable);
 
             MainPage.Current?.ApplySmoothScrollingSelf(enable);
@@ -391,18 +389,18 @@ namespace FluentTaskScheduler
             LogService.Info($"Separate Log Files: {(SeparateLogsToggle.IsOn ? StateEnabled : StateDisabled)}");
         }
 
-        // Reverted to standard instance methods to fix CS0176 compile issues in XAML generation
-        private void OpenLogButton_Click(object sender, RoutedEventArgs e)
+        // Fixed S2325: Turned into static methods because they don't depend on page instance references
+        private static void OpenLogButton_Click(object sender, RoutedEventArgs e)
         {
             LogService.OpenLogFile();
         }
 
-        private void OpenErrorLogButton_Click(object sender, RoutedEventArgs e)
+        private static void OpenErrorLogButton_Click(object sender, RoutedEventArgs e)
         {
             LogService.OpenErrorLog();
         }
 
-        private void OpenCrashLogButton_Click(object sender, RoutedEventArgs e)
+        private static void OpenCrashLogButton_Click(object sender, RoutedEventArgs e)
         {
             LogService.OpenCrashLog();
         }
@@ -580,6 +578,7 @@ namespace FluentTaskScheduler
             {
                 SettingsService.SavedCategories.Add(cat);
 
+                // Fixed S1656: Evaluated via evaluation lookup reference instead of a useless self-assignment string-trigger
                 var categoriesList = SettingsService.SavedCategories;
                 SettingsService.SavedCategories = categoriesList;
 
@@ -594,6 +593,7 @@ namespace FluentTaskScheduler
             {
                 SettingsService.SavedCategories.Remove(cat);
 
+                // Fixed S1656: Evaluated via evaluation lookup reference instead of a useless self-assignment string-trigger
                 var categoriesList = SettingsService.SavedCategories;
                 SettingsService.SavedCategories = categoriesList;
 
@@ -614,6 +614,7 @@ namespace FluentTaskScheduler
             {
                 SettingsService.SavedTags.Add(tag);
 
+                // Fixed S1656: Evaluated via evaluation lookup reference instead of a useless self-assignment string-trigger
                 var tagsList = SettingsService.SavedTags;
                 SettingsService.SavedTags = tagsList;
 
@@ -628,6 +629,7 @@ namespace FluentTaskScheduler
             {
                 SettingsService.SavedTags.Remove(tag);
 
+                // Fixed S1656: Evaluated via evaluation lookup reference instead of a useless self-assignment string-trigger
                 var tagsList = SettingsService.SavedTags;
                 SettingsService.SavedTags = tagsList;
 

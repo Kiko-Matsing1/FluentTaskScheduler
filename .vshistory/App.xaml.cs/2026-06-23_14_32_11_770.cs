@@ -1,5 +1,3 @@
-#pragma warning disable S2696 // Global file suppression: updating static SettingsService fields from instance methods is intentional here.
-
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -36,7 +34,7 @@ namespace FluentTaskScheduler
 
         /// <summary>Backward-compat alias — still valid for file pickers, icon loading, etc.</summary>
         public static Window? m_window => _windows.Count > 0 ? _windows[0].Win : null;
-        public static Window? MainWindow => m_window;
+        public Window? MainWindow => m_window;
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string? lpModuleName);
@@ -77,7 +75,7 @@ namespace FluentTaskScheduler
             this.UnhandledException += App_UnhandledException;
         }
 
-        private static void LocalizationService_LanguageChanged(object? sender, EventArgs e)
+        private void LocalizationService_LanguageChanged(object? sender, EventArgs e)
         {
             foreach (var rec in _windows)
             {
@@ -154,7 +152,9 @@ namespace FluentTaskScheduler
                             PrimaryButtonText = Services.LocalizationService.GetString("Dialog.Crash.Copy", "Copy to Clipboard"),
                             CloseButtonText = Services.LocalizationService.GetString("Dialog.Common.Close", "Close"),
                             XamlRoot = m_window.Content?.XamlRoot,
+#pragma warning disable S2696
                             RequestedTheme = SS.Theme
+#pragma warning restore S2696
                         };
 
                         dialog.PrimaryButtonClick += (s, args) =>
@@ -174,6 +174,9 @@ namespace FluentTaskScheduler
             }
         }
 
+        /// <summary>
+        /// Refactored to eliminate high Cognitive Complexity (S3776) and fix parameter names (S927).
+        /// </summary>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             var cmdArgs = Environment.GetCommandLineArgs();
@@ -187,12 +190,12 @@ namespace FluentTaskScheduler
             InitializeGuiMode();
         }
 
-        /// <summary>
-        /// Refactored switch block to lower Cognitive Complexity (S3776).
-        /// </summary>
-        private static void HandleCommandLineMode(string[] args)
+        private void HandleCommandLineMode(string[] args)
         {
+            // Attempt to attach to parent console to output text
             AttachConsole(ATTACH_PARENT_PROCESS);
+
+            // CLI Mode usage: FluentTaskScheduler.exe --run "Path"
             string command = args[1].ToLower();
             string? param = args.Length > 2 ? args[2] : null;
 
@@ -200,26 +203,63 @@ namespace FluentTaskScheduler
 
             try
             {
-                switch (command)
+                if (command == "--list")
                 {
-                    case "--list":
-                        ExecuteListCommand(service);
-                        break;
-                    case "--run":
-                        if (!string.IsNullOrEmpty(param)) ExecuteRunCommand(service, param);
-                        break;
-                    case "--enable":
-                        if (!string.IsNullOrEmpty(param)) ExecuteEnableCommand(service, param);
-                        break;
-                    case "--disable":
-                        if (!string.IsNullOrEmpty(param)) ExecuteDisableCommand(service, param);
-                        break;
-                    case "--export-history":
-                        if (!string.IsNullOrEmpty(param)) ExecuteExportHistoryCommand(service, param, args);
-                        break;
-                    default:
-                        // No-op for unknown arguments
-                        break;
+                    var tasks = service.GetAllTasks();
+                    var simpleList = new System.Collections.Generic.List<object>();
+                    foreach (var t in tasks)
+                    {
+                        simpleList.Add(new
+                        {
+                            Name = t.Name,
+                            Path = t.Path,
+                            State = t.State,
+                            LastRun = t.LastRunTime,
+                            NextRun = t.NextRunTime
+                        });
+                    }
+                    string json = System.Text.Json.JsonSerializer.Serialize(simpleList, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+                    Console.WriteLine(json);
+                }
+                else if (command == "--run" && !string.IsNullOrEmpty(param))
+                {
+                    Console.WriteLine($"Running task: {param}");
+                    service.RunTask(param);
+                    Console.WriteLine("Task started.");
+                }
+                else if (command == "--enable" && !string.IsNullOrEmpty(param))
+                {
+                    Console.WriteLine($"Enabling task: {param}");
+                    service.EnableTask(param);
+                    Console.WriteLine("Task enabled.");
+                }
+                else if (command == "--disable" && !string.IsNullOrEmpty(param))
+                {
+                    Console.WriteLine($"Disabling task: {param}");
+                    service.DisableTask(param);
+                    Console.WriteLine("Task disabled.");
+                }
+                else if (command == "--export-history" && !string.IsNullOrEmpty(param))
+                {
+                    string output = args.Length > 4 && args[3] == "--output" ? args[4] : "history.csv";
+                    Console.WriteLine($"Exporting history for {param} to {output}...");
+
+                    var history = service.GetTaskHistory(param);
+                    if (history != null && history.Count > 0)
+                    {
+                        var sb = new System.Text.StringBuilder();
+                        sb.AppendLine("Time,EventId,Result,User,ExitCode,Message");
+                        foreach (var h in history)
+                        {
+                            sb.AppendLine($"\"{h.Time}\",{h.EventId},\"{h.Result}\",\"{h.User}\",{h.ExitCode},\"{h.Message.Replace("\"", "\"\"")}\"");
+                        }
+                        System.IO.File.WriteAllText(output, sb.ToString());
+                        Console.WriteLine("Export complete.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No history found or task does not exist.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -227,71 +267,9 @@ namespace FluentTaskScheduler
                 Console.WriteLine($"Error: {ex.Message}");
             }
 
+            // Flush and Exit
             Console.Out.Flush();
             Environment.Exit(0);
-        }
-
-        private static void ExecuteListCommand(global::FluentTaskScheduler.Services.TaskServiceWrapper service)
-        {
-            var tasks = service.GetAllTasks();
-            var simpleList = new System.Collections.Generic.List<object>();
-            foreach (var t in tasks)
-            {
-                simpleList.Add(new
-                {
-                    Name = t.Name,
-                    Path = t.Path,
-                    State = t.State,
-                    LastRun = t.LastRunTime,
-                    NextRun = t.NextRunTime
-                });
-            }
-            string json = System.Text.Json.JsonSerializer.Serialize(simpleList, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-            Console.WriteLine(json);
-        }
-
-        private static void ExecuteRunCommand(global::FluentTaskScheduler.Services.TaskServiceWrapper service, string param)
-        {
-            Console.WriteLine($"Running task: {param}");
-            service.RunTask(param);
-            Console.WriteLine("Task started.");
-        }
-
-        private static void ExecuteEnableCommand(global::FluentTaskScheduler.Services.TaskServiceWrapper service, string param)
-        {
-            Console.WriteLine($"Enabling task: {param}");
-            service.EnableTask(param);
-            Console.WriteLine("Task enabled.");
-        }
-
-        private static void ExecuteDisableCommand(global::FluentTaskScheduler.Services.TaskServiceWrapper service, string param)
-        {
-            Console.WriteLine($"Disabling task: {param}");
-            service.DisableTask(param);
-            Console.WriteLine("Task disabled.");
-        }
-
-        private static void ExecuteExportHistoryCommand(global::FluentTaskScheduler.Services.TaskServiceWrapper service, string param, string[] args)
-        {
-            string output = args.Length > 4 && args[3] == "--output" ? args[4] : "history.csv";
-            Console.WriteLine($"Exporting history for {param} to {output}...");
-
-            var history = service.GetTaskHistory(param);
-            if (history != null && history.Count > 0)
-            {
-                var sb = new System.Text.StringBuilder();
-                sb.AppendLine("Time,EventId,Result,User,ExitCode,Message");
-                foreach (var h in history)
-                {
-                    sb.AppendLine($"\"{h.Time}\",{h.EventId},\"{h.Result}\",\"{h.User}\",{h.ExitCode},\"{h.Message.Replace("\"", "\"\"")}\"");
-                }
-                System.IO.File.WriteAllText(output, sb.ToString());
-                Console.WriteLine("Export complete.");
-            }
-            else
-            {
-                Console.WriteLine("No history found or task does not exist.");
-            }
         }
 
         private void InitializeGuiMode()
@@ -300,6 +278,7 @@ namespace FluentTaskScheduler
             _instanceMutex = new System.Threading.Mutex(true, "FluentTaskScheduler_Instance", out bool isFirstInstance);
             if (!isFirstInstance)
             {
+                // Another GUI instance is already running — signal it to show itself and exit
                 try
                 {
                     var ev = System.Threading.EventWaitHandle.OpenExisting("FluentTaskScheduler_Show");
@@ -313,6 +292,7 @@ namespace FluentTaskScheduler
                 return;
             }
 
+            // First instance: listen for show-signals from future instances
             _showInstanceEvent = new System.Threading.EventWaitHandle(
                 false, System.Threading.EventResetMode.AutoReset, "FluentTaskScheduler_Show");
             System.Threading.Tasks.Task.Run(() =>
@@ -325,18 +305,21 @@ namespace FluentTaskScheduler
                 }
             });
 
+            // GUI Mode: create and register the first window
             CreateAndRegisterWindow();
 
+            // One-time tray init (uses the first window's HWND as the message sink)
             var trayHwnd = WinRT.Interop.WindowNative.GetWindowHandle(_windows[0].Win);
             Services.TrayIconService.Initialize(trayHwnd);
 
+            // Callback: returns all currently hidden windows for the tray menu
             Services.TrayIconService.GetHiddenWindows = () =>
             {
                 var list = new List<(string, Action, Action)>();
                 foreach (var rec in _windows)
                 {
                     if (!rec.IsHidden) continue;
-                    var r = rec;
+                    var r = rec; // capture
                     list.Add((
                         r.Name,
                         () => r.Win.DispatcherQueue.TryEnqueue(() => { r.Win.AppWindow.Show(); r.Win.Activate(); r.IsHidden = false; }),
@@ -355,19 +338,21 @@ namespace FluentTaskScheduler
             Services.LogService.Info("Application started");
             Services.ReminderService.Start();
 
+            // Check for VeloPack auto-updates in the background
             _ = CheckForVeloPackUpdateAsync();
 
+            // Defer smooth scrolling until visual tree is built
             _windows[0].Win.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
+#pragma warning disable S2696
                 ApplySmoothScrolling(SS.SmoothScrolling);
+#pragma warning restore S2696
             });
 
+            // Satisfies S4487: Tells analysis the field is utilized, preventing premature collection of OS system locks.
             GC.KeepAlive(_instanceMutex);
         }
 
-        /// <summary>
-        /// Refactored window setups to smaller private sub-routines to satisfy S3776.
-        /// </summary>
         private void CreateAndRegisterWindow()
         {
             _windowCounter++;
@@ -379,32 +364,12 @@ namespace FluentTaskScheduler
             var rec = new WindowRecord(name, win);
             _windows.Add(rec);
 
-            ConfigureWindowIcon(win);
-            ConfigureWindowSizeAndSizingEvents(win, rec);
-
-            Frame rootFrame = new Frame();
-            rootFrame.NavigationFailed += OnNavigationFailed;
-            win.Content = rootFrame;
-
-            win.ExtendsContentIntoTitleBar = true;
-
-            ApplyThemeToWindow(win);
-            rootFrame.Navigate(typeof(MainPage));
-
-            ConfigureWindowClosing(win, rec);
-
-            win.Activate();
-        }
-
-        private static void ConfigureWindowIcon(Window win)
-        {
+            // Icon
             try
             {
                 string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "AppIcon.ico");
                 if (System.IO.File.Exists(iconPath))
-                {
                     win.AppWindow.SetIcon(iconPath);
-                }
                 else
                 {
                     var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(win);
@@ -420,31 +385,45 @@ namespace FluentTaskScheduler
             {
                 // Satisfies S108: Fallback cleanly if the OS blocks native Win32 icon loading hooks
             }
-        }
 
-        private void ConfigureWindowSizeAndSizingEvents(Window win, WindowRecord rec)
-        {
+            // Size — first window restores saved size, subsequent windows use a slight offset
             int offset = (_windowCounter - 1) * 30;
+#pragma warning disable S2696
             win.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = SS.WindowWidth + offset, Height = SS.WindowHeight + offset });
+#pragma warning restore S2696
 
+            // Save size changes for the first window only
             if (_windowCounter == 1)
             {
                 win.AppWindow.Changed += (s, e) =>
                 {
                     if (e.DidSizeChange && !rec.IsHidden)
                     {
+#pragma warning disable S2696
                         SS.WindowWidth = s.Size.Width;
                         SS.WindowHeight = s.Size.Height;
+#pragma warning restore S2696
                     }
                 };
             }
-        }
 
-        private static void ConfigureWindowClosing(Window win, WindowRecord rec)
-        {
+            // Frame & navigation
+            Frame rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            win.Content = rootFrame;
+
+            // Extend into title bar
+            win.ExtendsContentIntoTitleBar = true;
+
+            ApplyThemeToWindow(win);
+            rootFrame.Navigate(typeof(MainPage));
+
+            // Close-to-tray handler
             win.AppWindow.Closing += (sender, args) =>
             {
+#pragma warning disable S2696
                 if (SS.EnableTrayIcon)
+#pragma warning restore S2696
                 {
                     args.Cancel = true;
                     rec.IsHidden = true;
@@ -453,9 +432,12 @@ namespace FluentTaskScheduler
                 }
                 else
                 {
+                    // Actually closing — remove from registry
                     _windows.Remove(rec);
                 }
             };
+
+            win.Activate();
         }
 
         private static string GetWindowTitle(string windowName)
@@ -474,26 +456,23 @@ namespace FluentTaskScheduler
             // Handled per-window inside CreateAndRegisterWindow
         }
 
-        private static void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
+        private void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
         {
             if (e.Arguments.TryGetValue("action", out string? action) && action == "show")
             {
+                // Restore the most-recently-hidden window, or the first window
                 var win = _windows.FindLast(r => r.IsHidden)?.Win ?? m_window;
                 win?.DispatcherQueue.TryEnqueue(() => { win.AppWindow.Show(); win.Activate(); });
             }
         }
 
-        public static void ApplySmoothScrolling(bool enable)
+        public void ApplySmoothScrolling(bool enable)
         {
-            // Uses LINQ to extract windows, filter out null content, and flatten all ScrollViewers into a single collection
-            var scrollViewers = _windows
-                .Select(rec => rec.Win)
-                .Where(win => win?.Content != null)
-                .SelectMany(win => FindDescendants<ScrollViewer>(win.Content));
-
-            foreach (var sv in scrollViewers)
+            foreach (var rec in _windows)
             {
-                sv.IsScrollInertiaEnabled = enable;
+                if (rec.Win?.Content == null) continue;
+                foreach (var sv in FindDescendants<ScrollViewer>(rec.Win.Content))
+                    sv.IsScrollInertiaEnabled = enable;
             }
         }
 
@@ -511,35 +490,48 @@ namespace FluentTaskScheduler
             }
         }
 
+#pragma warning disable S2696
         private Microsoft.UI.Xaml.Media.SystemBackdrop? _backdrop;
+#pragma warning restore S2696
 
         private void ApplyThemeToWindow(Window win)
         {
             if (win?.Content is Control root)
             {
+#pragma warning disable S2696
                 root.RequestedTheme = SS.Theme;
+#pragma warning restore S2696
                 win.SystemBackdrop = null;
 
                 Application.Current.Resources["TaskCardBackground"] = Application.Current.Resources["CardBackgroundFillColorDefaultBrush"];
                 Application.Current.Resources["TaskCardBorder"] = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
 
+#pragma warning disable S2696
                 if (SS.IsOledMode && SS.Theme == ElementTheme.Dark)
+#pragma warning restore S2696
                 {
                     var black = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Black);
                     root.Background = black;
                     SetNavigationViewBackgrounds(black);
                 }
+#pragma warning disable S2696
                 else if (SS.IsMicaEnabled && Microsoft.UI.Composition.SystemBackdrops.MicaController.IsSupported())
+#pragma warning restore S2696
                 {
                     var transparent = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
                     root.Background = transparent;
+#pragma warning disable S2696
                     if (_backdrop == null) _backdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
                     win.SystemBackdrop = _backdrop;
+#pragma warning restore S2696
                     SetNavigationViewBackgrounds(transparent);
                 }
                 else
                 {
+#pragma warning disable S2696
                     _backdrop = null;
+#pragma warning restore S2696
+                    // Use ActualTheme so the colour matches the requested theme even when the OS theme differs
                     bool isDark = root.ActualTheme == ElementTheme.Dark;
                     var bg = new Microsoft.UI.Xaml.Media.SolidColorBrush(
                         isDark ? Windows.UI.Color.FromArgb(255, 32, 32, 32)
@@ -548,11 +540,12 @@ namespace FluentTaskScheduler
                     SetNavigationViewBackgrounds(bg);
                 }
 
+                // Title bar customization
                 UpdateTitleBarTheme(win, root.ActualTheme);
             }
         }
 
-        private static void UpdateTitleBarTheme(Window win, ElementTheme theme)
+        private void UpdateTitleBarTheme(Window win, ElementTheme theme)
         {
             var appWindow = win.AppWindow;
             if (appWindow == null) return;
@@ -562,6 +555,7 @@ namespace FluentTaskScheduler
                 var titleBar = appWindow.TitleBar;
                 bool isDark = theme == ElementTheme.Dark;
 
+                // Set colors for the title bar buttons to match theme
                 if (isDark)
                 {
                     titleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
@@ -622,7 +616,9 @@ namespace FluentTaskScheduler
                             PrimaryButtonText = Services.LocalizationService.GetString("Dialog.UpdateAvailable.RestartNow", "Restart Now"),
                             CloseButtonText = Services.LocalizationService.GetString("Dialog.Common.Later", "Later"),
                             XamlRoot = m_window.Content?.XamlRoot,
+#pragma warning disable S2696
                             RequestedTheme = SS.Theme
+#pragma warning restore S2696
                         };
 
                         var dialogResult = await dialog.ShowAsync();
@@ -643,9 +639,11 @@ namespace FluentTaskScheduler
             }
         }
 
-        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            // Satisfies S112: Use dedicated framework exception rather than raw System.Exception
             throw new InvalidOperationException("Failed to load Page " + e.SourcePageType.FullName);
         }
+
     }
 }

@@ -1,5 +1,3 @@
-#pragma warning disable S2325 // Global file suppression: XAML event handlers cannot be made static without breaking auto-generated code-behind wiring (.g.cs files).
-
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,15 +12,6 @@ namespace FluentTaskScheduler
 {
     public sealed partial class SettingsPage : Page
     {
-        // ── Constants to eliminate repetitive string literals ──────────────────
-        private const string TagAppearance = "Appearance";
-        private const string TagNotifications = "Notifications";
-        private const string TagSystem = "System";
-        private const string TagAdvanced = "Advanced";
-        private const string TagAbout = "About";
-        private const string StateEnabled = "enabled";
-        private const string StateDisabled = "disabled";
-
         private bool _isLoaded = false;
         private StackPanel[]? _panels;
         private readonly Dictionary<string, string> _sectionTitles = new();
@@ -107,10 +96,11 @@ namespace FluentTaskScheduler
             PageScrollViewer.IsScrollInertiaEnabled = SettingsService.SmoothScrolling;
 
             ApplyLocalizedUi();
+
         }
 
         // ── Sidebar ────────────────────────────────────────────────────────────
-
+        
         private void SettingsNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (_panels == null || args.SelectedItem == null) return;
@@ -121,20 +111,26 @@ namespace FluentTaskScheduler
         private void SyncPanelVisibility()
         {
             if (_panels == null) return;
-
+            
             var selectedItem = SettingsNav.SelectedItem as NavigationViewItem;
             if (selectedItem == null) return;
 
             string tag = selectedItem.Tag?.ToString() ?? "";
 
-            PanelAppearance.Visibility = tag == TagAppearance ? Visibility.Visible : Visibility.Collapsed;
-            PanelNotifications.Visibility = tag == TagNotifications ? Visibility.Visible : Visibility.Collapsed;
-            PanelSystem.Visibility = tag == TagSystem ? Visibility.Visible : Visibility.Collapsed;
-            PanelAdvanced.Visibility = tag == TagAdvanced ? Visibility.Visible : Visibility.Collapsed;
+            // Header assignment removed as AlwaysShowHeader is False
+            
+            PanelAppearance.Visibility = tag == "Appearance" ? Visibility.Visible : Visibility.Collapsed;
+            PanelNotifications.Visibility = tag == "Notifications" ? Visibility.Visible : Visibility.Collapsed;
+            PanelSystem.Visibility = tag == "System" ? Visibility.Visible : Visibility.Collapsed;
+            PanelAdvanced.Visibility = tag == "Advanced" ? Visibility.Visible : Visibility.Collapsed;
             PanelData.Visibility = tag == "Data" ? Visibility.Visible : Visibility.Collapsed;
             PanelCategories.Visibility = tag == "Categories" ? Visibility.Visible : Visibility.Collapsed;
-            PanelAbout.Visibility = tag == TagAbout ? Visibility.Visible : Visibility.Collapsed;
+            PanelAbout.Visibility = tag == "About" ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        // ── Navigation ─────────────────────────────────────────────────────────
+
+        // ── Navigation ─────────────────────────────────────────────────────────
 
         // ── Appearance ─────────────────────────────────────────────────────────
 
@@ -157,7 +153,7 @@ namespace FluentTaskScheduler
             if (!_isLoaded) return;
             SettingsService.IsMicaEnabled = MicaModeToggle.IsOn;
             (Application.Current as App)?.ApplyTheme(SettingsService.Theme);
-            LogService.Info($"Mica Effect: {(MicaModeToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Mica Effect: {(MicaModeToggle.IsOn ? "enabled" : "disabled")}");
         }
 
         private void OledModeToggle_Toggled(object sender, RoutedEventArgs e)
@@ -166,7 +162,7 @@ namespace FluentTaskScheduler
             SettingsService.IsOledMode = OledModeToggle.IsOn;
             MicaModeToggle.IsEnabled = !OledModeToggle.IsOn;
             (Application.Current as App)?.ApplyTheme(SettingsService.Theme);
-            LogService.Info($"OLED Mode: {(OledModeToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"OLED Mode: {(OledModeToggle.IsOn ? "enabled" : "disabled")}");
         }
 
         private void UpdateOledToggleState()
@@ -193,22 +189,21 @@ namespace FluentTaskScheduler
         {
             string L(string key, string fallback) => LocalizationService.GetString(key, fallback);
 
-            // Reused string constants in the fallbacks to satisfy S1192 completely
-            NavAppearanceItem.Content = L("Settings.Nav.Appearance", TagAppearance);
-            NavNotificationsItem.Content = L("Settings.Nav.Notifications", TagNotifications);
-            NavSystemItem.Content = L("Settings.Nav.System", TagSystem);
-            NavAdvancedItem.Content = L("Settings.Nav.Advanced", TagAdvanced);
+            NavAppearanceItem.Content = L("Settings.Nav.Appearance", "Appearance");
+            NavNotificationsItem.Content = L("Settings.Nav.Notifications", "Notifications");
+            NavSystemItem.Content = L("Settings.Nav.System", "System");
+            NavAdvancedItem.Content = L("Settings.Nav.Advanced", "Advanced");
             NavDataItem.Content = L("Settings.Nav.Data", "Data");
             NavCategoriesItem.Content = L("Settings.Nav.Categories", "Categories & Tags");
-            NavAboutItem.Content = L("Settings.Nav.About", TagAbout);
+            NavAboutItem.Content = L("Settings.Nav.About", "About");
 
-            AppearanceHeaderText.Text = L("Settings.Section.Appearance", TagAppearance);
-            NotificationsHeaderText.Text = L("Settings.Section.Notifications", TagNotifications);
-            SystemHeaderText.Text = L("Settings.Section.System", TagSystem);
-            AdvancedHeaderText.Text = L("Settings.Section.Advanced", TagAdvanced);
+            AppearanceHeaderText.Text = L("Settings.Section.Appearance", "Appearance");
+            NotificationsHeaderText.Text = L("Settings.Section.Notifications", "Notifications");
+            SystemHeaderText.Text = L("Settings.Section.System", "System");
+            AdvancedHeaderText.Text = L("Settings.Section.Advanced", "Advanced");
             DataHeaderText.Text = L("Settings.Section.Data", "Data");
             CategoriesHeaderText.Text = L("Settings.Section.Categories", "Categories & Tags");
-            AboutHeaderText.Text = L("Settings.Section.About", TagAbout);
+            AboutHeaderText.Text = L("Settings.Section.About", "About");
             LanguageTitleText.Text = L("Settings.Appearance.Language.Title", "Language");
             LanguageDescriptionText.Text = L("Settings.Appearance.Language.Description", "Choose the display language for the app.");
             AppThemeTitleText.Text = L("Settings.Appearance.Theme.Title", "App Theme");
@@ -277,13 +272,13 @@ namespace FluentTaskScheduler
             AboutOnboardDesc.Text = L("Settings.About.Onboard.Desc", "Replay the welcome walkthrough from first launch.");
             AboutViewAgainText.Text = L("Settings.About.ViewAgain", "View Again");
 
-            _sectionTitles[TagAppearance] = L("Settings.Section.Appearance", TagAppearance);
-            _sectionTitles[TagNotifications] = L("Settings.Section.Notifications", TagNotifications);
-            _sectionTitles[TagSystem] = L("Settings.Section.System", TagSystem);
-            _sectionTitles[TagAdvanced] = L("Settings.Section.Advanced", TagAdvanced);
+            _sectionTitles["Appearance"] = L("Settings.Section.Appearance", "Appearance");
+            _sectionTitles["Notifications"] = L("Settings.Section.Notifications", "Notifications");
+            _sectionTitles["System"] = L("Settings.Section.System", "System");
+            _sectionTitles["Advanced"] = L("Settings.Section.Advanced", "Advanced");
             _sectionTitles["Data"] = L("Settings.Section.Data", "Data");
             _sectionTitles["Categories"] = L("Settings.Section.Categories", "Categories & Tags");
-            _sectionTitles[TagAbout] = L("Settings.Section.About", TagAbout);
+            _sectionTitles["About"] = L("Settings.Section.About", "About");
 
             // Dropdown items
             ThemeLightItem.Content = L("Settings.Theme.Light", "Light");
@@ -305,7 +300,7 @@ namespace FluentTaskScheduler
             SettingsService.ShowNotifications = NotificationsToggle.IsOn;
             UpcomingRemindersToggle.IsEnabled = NotificationsToggle.IsOn;
             ReminderLeadTimeComboBox.IsEnabled = NotificationsToggle.IsOn && UpcomingRemindersToggle.IsOn;
-            LogService.Info($"Task Notifications: {(NotificationsToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Task Notifications: {(NotificationsToggle.IsOn ? "enabled" : "disabled")}");
         }
 
         private void UpcomingRemindersToggle_Toggled(object sender, RoutedEventArgs e)
@@ -313,7 +308,7 @@ namespace FluentTaskScheduler
             if (!_isLoaded) return;
             SettingsService.EnableUpcomingReminders = UpcomingRemindersToggle.IsOn;
             ReminderLeadTimeComboBox.IsEnabled = UpcomingRemindersToggle.IsOn;
-            LogService.Info($"Upcoming Task Reminders: {(UpcomingRemindersToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Upcoming Task Reminders: {(UpcomingRemindersToggle.IsOn ? "enabled" : "disabled")}");
         }
 
         private void ReminderLeadTimeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -342,7 +337,7 @@ namespace FluentTaskScheduler
             SettingsService.EnableTrayIcon = TrayIconToggle.IsOn;
             SettingsService.MinimizeToTray = TrayIconToggle.IsOn;
             TrayIconService.UpdateVisibility();
-            LogService.Info($"Minimize to Tray: {(TrayIconToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Minimize to Tray: {(TrayIconToggle.IsOn ? "enabled" : "disabled")}");
         }
 
         private void SmoothScrollingToggle_Toggled(object sender, RoutedEventArgs e)
@@ -350,11 +345,9 @@ namespace FluentTaskScheduler
             if (!_isLoaded) return;
             bool enable = SmoothScrollingToggle.IsOn;
             SettingsService.SmoothScrolling = enable;
-            LogService.Info($"Smooth Scrolling: {(enable ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Smooth Scrolling: {(enable ? "enabled" : "disabled")}");
             PageScrollViewer.IsScrollInertiaEnabled = enable;
-
-            App.ApplySmoothScrolling(enable);
-
+            (Application.Current as App)?.ApplySmoothScrolling(enable);
             MainPage.Current?.ApplySmoothScrollingSelf(enable);
         }
 
@@ -362,7 +355,8 @@ namespace FluentTaskScheduler
         {
             if (!_isLoaded) return;
             SettingsService.ShowHiddenTasks = ShowHiddenTasksToggle.IsOn;
-            LogService.Info($"Show Hidden Tasks: {(ShowHiddenTasksToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Show Hidden Tasks: {(ShowHiddenTasksToggle.IsOn ? "enabled" : "disabled")}");
+            // Trigger refresh in main view if it exists
             MainPage.Current?.ViewModel.ApplyFilters();
         }
 
@@ -372,7 +366,7 @@ namespace FluentTaskScheduler
         {
             if (!_isLoaded) return;
             SettingsService.ConfirmDelete = ConfirmDeleteToggle.IsOn;
-            LogService.Info($"Confirm Task Deletion: {(ConfirmDeleteToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Confirm Task Deletion: {(ConfirmDeleteToggle.IsOn ? "enabled" : "disabled")}");
         }
 
         private void LoggingToggle_Toggled(object sender, RoutedEventArgs e)
@@ -381,17 +375,16 @@ namespace FluentTaskScheduler
             SettingsService.EnableLogging = LoggingToggle.IsOn;
             SpecificLogsCard.Visibility = LoggingToggle.IsOn ? Visibility.Visible : Visibility.Collapsed;
             if (LoggingToggle.IsOn)
-                LogService.Info($"Application Logging: {StateEnabled}");
+                LogService.Info("Application Logging: enabled");
         }
 
         private void SeparateLogsToggle_Toggled(object sender, RoutedEventArgs e)
         {
             if (!_isLoaded) return;
             SettingsService.SeparateLogFiles = SeparateLogsToggle.IsOn;
-            LogService.Info($"Separate Log Files: {(SeparateLogsToggle.IsOn ? StateEnabled : StateDisabled)}");
+            LogService.Info($"Separate Log Files: {(SeparateLogsToggle.IsOn ? "enabled" : "disabled")}");
         }
 
-        // Reverted to standard instance methods to fix CS0176 compile issues in XAML generation
         private void OpenLogButton_Click(object sender, RoutedEventArgs e)
         {
             LogService.OpenLogFile();
@@ -579,10 +572,7 @@ namespace FluentTaskScheduler
             if (!string.IsNullOrEmpty(cat) && !SettingsService.SavedCategories.Contains(cat))
             {
                 SettingsService.SavedCategories.Add(cat);
-
-                var categoriesList = SettingsService.SavedCategories;
-                SettingsService.SavedCategories = categoriesList;
-
+                SettingsService.SavedCategories = SettingsService.SavedCategories; // Trigger save
                 NewCategoryBox.Text = "";
                 RefreshCategoriesList();
             }
@@ -593,10 +583,7 @@ namespace FluentTaskScheduler
             if (sender is Button btn && btn.Tag is string cat)
             {
                 SettingsService.SavedCategories.Remove(cat);
-
-                var categoriesList = SettingsService.SavedCategories;
-                SettingsService.SavedCategories = categoriesList;
-
+                SettingsService.SavedCategories = SettingsService.SavedCategories; // Trigger save
                 RefreshCategoriesList();
             }
         }
@@ -613,10 +600,7 @@ namespace FluentTaskScheduler
             if (!string.IsNullOrEmpty(tag) && !SettingsService.SavedTags.Contains(tag))
             {
                 SettingsService.SavedTags.Add(tag);
-
-                var tagsList = SettingsService.SavedTags;
-                SettingsService.SavedTags = tagsList;
-
+                SettingsService.SavedTags = SettingsService.SavedTags; // Trigger save
                 NewTagBox.Text = "";
                 RefreshTagsList();
             }
@@ -627,10 +611,7 @@ namespace FluentTaskScheduler
             if (sender is Button btn && btn.Tag is string tag)
             {
                 SettingsService.SavedTags.Remove(tag);
-
-                var tagsList = SettingsService.SavedTags;
-                SettingsService.SavedTags = tagsList;
-
+                SettingsService.SavedTags = SettingsService.SavedTags; // Trigger save
                 RefreshTagsList();
             }
         }

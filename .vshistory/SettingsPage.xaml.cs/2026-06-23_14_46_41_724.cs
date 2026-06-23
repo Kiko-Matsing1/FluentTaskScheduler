@@ -1,3 +1,4 @@
+#pragma warning disable S2696 // Global file suppression: updating static SettingsService fields from instance methods is intentional here.
 #pragma warning disable S2325 // Global file suppression: XAML event handlers cannot be made static without breaking auto-generated code-behind wiring (.g.cs files).
 
 using System;
