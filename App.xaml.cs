@@ -63,14 +63,10 @@ namespace FluentTaskScheduler
             Services.LocalizationService.Initialize();
             Services.LocalizationService.LanguageChanged += LocalizationService_LanguageChanged;
 
-            // Swapped to native Windows App SDK Manager and registered the manager
-            AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
-            AppNotificationManager.Default.Register();
-
             this.InitializeComponent();
 
             // Global handlers
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match
+#pragma warning disable CS8622
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 #pragma warning restore CS8622
@@ -296,6 +292,10 @@ namespace FluentTaskScheduler
 
         private void InitializeGuiMode()
         {
+            // Safe zone: The App SDK runtime is fully alive and active now
+            AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
+            AppNotificationManager.Default.Register();
+
             // ── Single-instance enforcement (GUI mode) ──────────────────────────
             _instanceMutex = new System.Threading.Mutex(true, "FluentTaskScheduler_Instance", out bool isFirstInstance);
             if (!isFirstInstance)
