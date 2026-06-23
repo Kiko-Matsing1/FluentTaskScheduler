@@ -51,4 +51,7 @@
     <PackageReference Include="TaskScheduler" Version="2.12.2" />
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
+  <ItemGroup>
+	<Compile Remove="**/.vshistory/**/*.cs" />
+  </ItemGroup>
 </Project>

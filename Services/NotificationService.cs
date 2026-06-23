@@ -1,11 +1,24 @@
 using System;
-using Microsoft.Windows.AppNotifications;          // Swapped namespace
-using Microsoft.Windows.AppNotifications.Builder;  // Added for AppNotificationBuilder
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 
 namespace FluentTaskScheduler.Services
 {
     public static class NotificationService
     {
+        // Fixed CodeRabbit Finding: Wraps window shell notification dispatches inside a safe try-catch wrapper
+        private static void TryShow(AppNotification notification)
+        {
+            try
+            {
+                AppNotificationManager.Default.Show(notification);
+            }
+            catch (Exception ex)
+            {
+                LogService.Error($"Notification dispatch failed: {ex.Message}");
+            }
+        }
+
         public static void ShowTaskStarted(string taskName)
         {
             if (!SettingsService.ShowNotifications) return;
@@ -15,7 +28,7 @@ namespace FluentTaskScheduler.Services
                 .AddText("The task has been triggered manually.")
                 .BuildNotification();
 
-            AppNotificationManager.Default.Show(notification);
+            TryShow(notification);
         }
 
         public static void ShowTaskError(string taskName, string error)
@@ -27,7 +40,7 @@ namespace FluentTaskScheduler.Services
                 .AddText(error)
                 .BuildNotification();
 
-            AppNotificationManager.Default.Show(notification);
+            TryShow(notification);
         }
 
         public static void ShowUpcomingTask(string taskName, int minutesUntilRun)
@@ -42,7 +55,7 @@ namespace FluentTaskScheduler.Services
                 .AddText($"Scheduled to run in {timeLabel}.")
                 .BuildNotification();
 
-            AppNotificationManager.Default.Show(notification);
+            TryShow(notification);
         }
 
         private static bool _trayNotificationShown = false;
@@ -58,7 +71,7 @@ namespace FluentTaskScheduler.Services
                 .AddText("The app has been minimized to the system tray. Click to restore, or double-click the tray icon.")
                 .BuildNotification();
 
-            AppNotificationManager.Default.Show(notification);
+            TryShow(notification);
         }
     }
 }

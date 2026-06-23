@@ -578,9 +578,8 @@ namespace FluentTaskScheduler
             string cat = NewCategoryBox.Text.Trim();
             if (!string.IsNullOrEmpty(cat) && !SettingsService.SavedCategories.Contains(cat))
             {
-                SettingsService.SavedCategories.Add(cat);
-
-                var categoriesList = SettingsService.SavedCategories;
+                // Fixed CodeRabbit Finding: Construct a new list instance rather than mutating the reference inline
+                var categoriesList = new List<string>(SettingsService.SavedCategories) { cat };
                 SettingsService.SavedCategories = categoriesList;
 
                 NewCategoryBox.Text = "";
@@ -592,9 +591,9 @@ namespace FluentTaskScheduler
         {
             if (sender is Button btn && btn.Tag is string cat)
             {
-                SettingsService.SavedCategories.Remove(cat);
-
-                var categoriesList = SettingsService.SavedCategories;
+                // Fixed CodeRabbit Finding: Explicit instance copy assignment to ensure atomic persistence execution
+                var categoriesList = new List<string>(SettingsService.SavedCategories);
+                categoriesList.Remove(cat);
                 SettingsService.SavedCategories = categoriesList;
 
                 RefreshCategoriesList();
@@ -612,9 +611,8 @@ namespace FluentTaskScheduler
             string tag = NewTagBox.Text.Trim();
             if (!string.IsNullOrEmpty(tag) && !SettingsService.SavedTags.Contains(tag))
             {
-                SettingsService.SavedTags.Add(tag);
-
-                var tagsList = SettingsService.SavedTags;
+                // Fixed CodeRabbit Finding: Instantiate direct value lists to eliminate reference-leak coupling
+                var tagsList = new List<string>(SettingsService.SavedTags) { tag };
                 SettingsService.SavedTags = tagsList;
 
                 NewTagBox.Text = "";
@@ -626,9 +624,9 @@ namespace FluentTaskScheduler
         {
             if (sender is Button btn && btn.Tag is string tag)
             {
-                SettingsService.SavedTags.Remove(tag);
-
-                var tagsList = SettingsService.SavedTags;
+                // Fixed CodeRabbit Finding: Explicit clean instance array state synchronization
+                var tagsList = new List<string>(SettingsService.SavedTags);
+                tagsList.Remove(tag);
                 SettingsService.SavedTags = tagsList;
 
                 RefreshTagsList();
@@ -636,3 +634,4 @@ namespace FluentTaskScheduler
         }
     }
 }
+    

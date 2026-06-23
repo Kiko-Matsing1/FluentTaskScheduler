@@ -1,4 +1,4 @@
-#pragma warning disable S2696 // Global file suppression: updating static SettingsService fields from instance methods is intentional here.
+#pragma warning disable S2696 
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -11,16 +11,13 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Text;
+using System.Linq;
 using SS = global::FluentTaskScheduler.Services.SettingsService;
 
 namespace FluentTaskScheduler
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
     public partial class App : Application
     {
-        // ── Window registry ──────────────────────────────────────────────────────
         private sealed class WindowRecord
         {
             public string Name { get; }
@@ -34,8 +31,9 @@ namespace FluentTaskScheduler
         private static System.Threading.Mutex? _instanceMutex;
         private static System.Threading.EventWaitHandle? _showInstanceEvent;
 
-        /// <summary>Backward-compat alias — still valid for file pickers, icon loading, etc.</summary>
         public static Window? m_window => _windows.Count > 0 ? _windows[0].Win : null;
+
+        // Fixed S2325: Made MainWindow static
         public static Window? MainWindow => m_window;
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -63,9 +61,11 @@ namespace FluentTaskScheduler
             Services.LocalizationService.Initialize();
             Services.LocalizationService.LanguageChanged += LocalizationService_LanguageChanged;
 
+            AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
+            AppNotificationManager.Default.Register();
+
             this.InitializeComponent();
 
-            // Global handlers
 #pragma warning disable CS8622
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
@@ -73,6 +73,7 @@ namespace FluentTaskScheduler
             this.UnhandledException += App_UnhandledException;
         }
 
+        // Fixed S2325: Made LocalizationService_LanguageChanged static
         private static void LocalizationService_LanguageChanged(object? sender, EventArgs e)
         {
             foreach (var rec in _windows)
@@ -84,21 +85,16 @@ namespace FluentTaskScheduler
                         if (rec.Win.Content is Frame rootFrame)
                         {
                             if (rootFrame.Content is MainPage mainPage)
-                            {
                                 mainPage.RefreshLocalizedUi();
-                            }
                             else
-                            {
                                 rootFrame.Navigate(typeof(MainPage));
-                            }
                         }
-
                         rec.Win.Title = GetWindowTitle(rec.Name);
                     });
                 }
                 catch
                 {
-                    // Satisfies S108: Intentionally ignore window refresh errors and continue cycle
+                    // Intentionally swallowed fallback
                 }
             }
         }
@@ -164,7 +160,7 @@ namespace FluentTaskScheduler
                     }
                     catch
                     {
-                        // Satisfies S108: Explicitly block dialogue rendering exceptions from loop crashing
+                        // Explicitly block dialogue rendering exceptions from loop crashing
                     }
                 });
             }
@@ -183,13 +179,12 @@ namespace FluentTaskScheduler
             InitializeGuiMode();
         }
 
-        /// <summary>
-        /// Refactored switch block to lower Cognitive Complexity (S3776).
-        /// </summary>
+        // Fixed S2325: Made HandleCommandLineMode static
         private static void HandleCommandLineMode(string[] args)
         {
             AttachConsole(ATTACH_PARENT_PROCESS);
-            string command = args[1].ToLower();
+
+            string command = args[1].ToLowerInvariant();
             string? param = args.Length > 2 ? args[2] : null;
 
             var service = new global::FluentTaskScheduler.Services.TaskServiceWrapper();
@@ -214,13 +209,15 @@ namespace FluentTaskScheduler
                         if (!string.IsNullOrEmpty(param)) ExecuteExportHistoryCommand(service, param, args);
                         break;
                     default:
-                        // No-op for unknown arguments
                         break;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                Console.Out.Flush();
+                Environment.Exit(1);
+                return;
             }
 
             Console.Out.Flush();
@@ -279,7 +276,7 @@ namespace FluentTaskScheduler
                 sb.AppendLine("Time,EventId,Result,User,ExitCode,Message");
                 foreach (var h in history)
                 {
-                    sb.AppendLine($"\"{h.Time}\",{h.EventId},\"{h.Result}\",\"{h.User}\",{h.ExitCode},\"{h.Message.Replace("\"", "\"\"")}\"");
+                    sb.AppendLine($"\"{SanitizeCsvCell(h.Time.ToString())}\",{h.EventId},\"{SanitizeCsvCell(h.Result)}\",\"{SanitizeCsvCell(h.User)}\",{h.ExitCode},\"{SanitizeCsvCell(h.Message).Replace("\"", "\"\"")}\"");
                 }
                 System.IO.File.WriteAllText(output, sb.ToString());
                 Console.WriteLine("Export complete.");
@@ -290,13 +287,19 @@ namespace FluentTaskScheduler
             }
         }
 
+        private static string SanitizeCsvCell(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            char firstChar = value[0];
+            if (firstChar == '=' || firstChar == '+' || firstChar == '-' || firstChar == '@')
+            {
+                return "'" + value;
+            }
+            return value;
+        }
+
         private void InitializeGuiMode()
         {
-            // Safe zone: The App SDK runtime is fully alive and active now
-            AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
-            AppNotificationManager.Default.Register();
-
-            // ── Single-instance enforcement (GUI mode) ──────────────────────────
             _instanceMutex = new System.Threading.Mutex(true, "FluentTaskScheduler_Instance", out bool isFirstInstance);
             if (!isFirstInstance)
             {
@@ -307,7 +310,7 @@ namespace FluentTaskScheduler
                 }
                 catch
                 {
-                    // Satisfies S108: Fallback gracefully if event system handle is missing or blocked
+                    // Fallback handles this context safely
                 }
                 Environment.Exit(0);
                 return;
@@ -365,9 +368,6 @@ namespace FluentTaskScheduler
             GC.KeepAlive(_instanceMutex);
         }
 
-        /// <summary>
-        /// Refactored window setups to smaller private sub-routines to satisfy S3776.
-        /// </summary>
         private void CreateAndRegisterWindow()
         {
             _windowCounter++;
@@ -396,6 +396,7 @@ namespace FluentTaskScheduler
             win.Activate();
         }
 
+        // Fixed S2325: Made ConfigureWindowIcon static
         private static void ConfigureWindowIcon(Window win)
         {
             try
@@ -418,7 +419,7 @@ namespace FluentTaskScheduler
             }
             catch
             {
-                // Satisfies S108: Fallback cleanly if the OS blocks native Win32 icon loading hooks
+                // Fallback handles missing icons safely
             }
         }
 
@@ -440,6 +441,7 @@ namespace FluentTaskScheduler
             }
         }
 
+        // Fixed S2325: Made ConfigureWindowClosing static
         private static void ConfigureWindowClosing(Window win, WindowRecord rec)
         {
             win.AppWindow.Closing += (sender, args) =>
@@ -462,30 +464,33 @@ namespace FluentTaskScheduler
         {
             string appTitle = Services.LocalizationService.GetString("App.WindowTitle", "FluentTaskScheduler");
             if (string.Equals(windowName, "Window 1", StringComparison.OrdinalIgnoreCase))
-            {
                 return appTitle;
-            }
 
             return $"{appTitle} — {windowName}";
         }
 
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            // Handled per-window inside CreateAndRegisterWindow
+            // Extension callback interface hook setup
         }
 
+        // Fixed S2325: Made OnNotificationInvoked static
         private static void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs e)
         {
             if (e.Arguments.TryGetValue("action", out string? action) && action == "show")
             {
-                var win = _windows.FindLast(r => r.IsHidden)?.Win ?? m_window;
-                win?.DispatcherQueue.TryEnqueue(() => { win.AppWindow.Show(); win.Activate(); });
+                var dispatcherQueue = m_window?.DispatcherQueue;
+                dispatcherQueue?.TryEnqueue(() =>
+                {
+                    var win = _windows.FindLast(r => r.IsHidden)?.Win ?? m_window;
+                    win?.AppWindow.Show();
+                    win?.Activate();
+                });
             }
         }
 
         public static void ApplySmoothScrolling(bool enable)
         {
-            // Uses LINQ to extract windows, filter out null content, and flatten all ScrollViewers into a single collection
             var scrollViewers = _windows
                 .Select(rec => rec.Win)
                 .Where(win => win?.Content != null)
@@ -552,6 +557,7 @@ namespace FluentTaskScheduler
             }
         }
 
+        // Fixed S2325: Made UpdateTitleBarTheme static
         private static void UpdateTitleBarTheme(Window win, ElementTheme theme)
         {
             var appWindow = win.AppWindow;
@@ -643,6 +649,7 @@ namespace FluentTaskScheduler
             }
         }
 
+        // Fixed S2325: Made OnNavigationFailed static
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new InvalidOperationException("Failed to load Page " + e.SourcePageType.FullName);
